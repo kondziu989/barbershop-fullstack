@@ -1,0 +1,36 @@
+//Varas
+
+$colors:(
+    primary: #efb943,
+    primary-light: lighten(#efb943, 20%),
+    primary-dark: darken(#efb943, 20%),
+    bg: #454545,
+    bg2: #404040,
+    font: white
+);
+
+
+//functions
+@function color($color-name)
+{
+    @return map-get($colors, $color-name)
+}
+
+
+
+body
+{
+    background-color: color(bg);
+    margin:0px;
+    padding:0px;
+}
+
+a
+{
+    text-decoration:none;
+}
+
+a:hover
+{
+    text-decoration:none;
+}
