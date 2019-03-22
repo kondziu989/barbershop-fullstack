@@ -16,16 +16,16 @@ class Header extends Component{
             <nav>
                 <ul>
                     <li>
-                        <Link to="#">Oferta</Link>
+                        <Link to="/offer">Oferta</Link>
                     </li>
                     <li>
-                        <Link to="#">Produkty</Link>
+                        <Link to="/shop">Produkty</Link>
                     </li>
                     <li>
                         <Link to="/">O nas</Link>
                     </li>
                     <li>
-                        <Link to="#">Zespół</Link>
+                        <Link to="/team">Zespół</Link>
                     </li>
                 </ul>
             </nav>        

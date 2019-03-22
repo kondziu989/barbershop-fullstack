@@ -49,7 +49,7 @@ class Footer extends Component {
                         <td>08:00 - 20:00</td>
                     </tr>
                     <tr>
-                        <td>CZW</td>
+                        <td>CZ</td>
                         <td>08:00 - 21:00</td>
                     </tr>
                     <tr>
