@@ -1,9 +1,11 @@
 const barberResolver = require('./barber');
 const productResolver = require('./product');
+const serviceResolver = require('./service');
 
 const rootResolver = {
     ...barberResolver,
-    ...productResolver
+    ...productResolver,
+    ...serviceResolver
 }
 
 module.exports = rootResolver;

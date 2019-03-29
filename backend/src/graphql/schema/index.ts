@@ -19,9 +19,17 @@ type Product{
     description: String
 }
 
+type Service{
+    ids: Int
+    name: String
+    price: Float
+    duration: Int
+}
+
 type RootQuery {
     barbers: [Barber!]!
     products: [Product!]!
+    services: [Service!]!
 }
 
 schema {
