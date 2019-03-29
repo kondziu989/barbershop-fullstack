@@ -1,11 +1,28 @@
 import React, {Component} from 'react';
 import { BrowserRouter, Route, Link } from 'react-router-dom'
 import logo from './logo.png'
+import { AppBar, Grid } from '@material-ui/core';
 
 
 class Header extends Component{
     render(){
         return(
+            // <Grid container alignItems="center" justify="center">
+            //     <Grid container alignItems="center" justify="center" item xs={10}>
+            //         <Grid item xs={6} sm={3}>
+            //             <Link to="/offer">Oferta</Link>
+            //         </Grid>
+            //         <Grid item xs={6} sm={3}>
+            //             <Link to="/shop">Produkty</Link>
+            //         </Grid>
+            //         <Grid item xs={6}  sm={3}>
+            //             <Link to="/">O nas</Link>
+            //         </Grid>
+            //         <Grid item xs={6}  sm={3}>
+            //             <Link to="/team">Zespół</Link>
+            //         </Grid>
+            //     </Grid>
+            // </Grid>
             <header>
             <div className="wrap">
                 <div className = "logo">
@@ -29,7 +46,6 @@ class Header extends Component{
                     </li>
                 </ul>
             </nav>        
-            
             </header>
         );
     }
