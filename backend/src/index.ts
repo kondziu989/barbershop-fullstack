@@ -19,5 +19,6 @@ app.use(
   })
 );
 
+const PORT = process.env.PORT || 3001;
 
-app.listen(3001);
+app.listen(PORT);
