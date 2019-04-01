@@ -2,12 +2,12 @@ import React, {Component} from 'react';
 import { BrowserRouter, Route, Link } from 'react-router-dom'
 import logo from './logo.png'
 import { AppBar, Grid } from '@material-ui/core';
-
-
+import RegisterDialog from '../registerComponent/registerDialog'
+import LoginDialog from '../loginComponent/LoginDialog';
 class Header extends Component{
     render(){
         return(
-            // <Grid container alignItems="center" justify="center">
+            // <Grid container alignItems="center"2 justify="center">
             //     <Grid container alignItems="center" justify="center" item xs={10}>
             //         <Grid item xs={6} sm={3}>
             //             <Link to="/offer">Oferta</Link>
@@ -28,6 +28,7 @@ class Header extends Component{
                 <div className = "logo">
                     <img src={logo} alt='' width='100px'></img>
                     <div className="logoTitle"><span className="primary-font">Mohawk </span>Barbershop</div>
+                
                 </div>
             </div>
             <nav>
@@ -45,7 +46,11 @@ class Header extends Component{
                         <Link to="/team">Zespół</Link>
                     </li>
                 </ul>
-            </nav>        
+            </nav> 
+            <Grid container>    
+                <RegisterDialog></RegisterDialog>
+                <LoginDialog></LoginDialog>
+                </Grid>
             </header>
         );
     }

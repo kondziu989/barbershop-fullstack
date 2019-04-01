@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import { WithStyles, createStyles, Theme, withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 
@@ -8,22 +8,17 @@ import '../../Assets/css/offer/offer.css'
 import { Table, TableHead, TableRow, TableBody, TableCell, Button } from '@material-ui/core';
 import { throws } from 'assert';
 
-//components
 
-const styles = {
-  table: {
+//components
+const styles = (theme:Theme) => createStyles({
+table: {
     color:'white',
-  },
-  button: {
-    backgroundColor: '#efb943',
-    color:'white',
-    '&:hover': {
-      backgroundColor: '#454545',
-      color: '#efb943'
-    }
   }
+});
+
+// interface Props extends WithStyles<typeof styles>{
   
-};
+// }
 interface Service {
   idS: number;
   name: string;
@@ -41,13 +36,13 @@ services
   }
 }
 `
-interface OfferProps{
+interface OfferProps extends WithStyles<typeof styles>{
   
 }
 interface OfferState{
   services: Array<Service>
 }
-class Offer extends Component<OfferProps, OfferState> {
+const Offer = withStyles(styles)(class extends Component<OfferProps, OfferState> {
 
   constructor(props: any){
     super(props);
@@ -81,23 +76,24 @@ class Offer extends Component<OfferProps, OfferState> {
 
 
   render() {
+    const { classes } = this.props
     return (
       <Grid container justify="center">
       <Grid container className = "content" justify="center" item xs={9}>
         <Grid item xs={12}>
-          <Table className="primary-font" style={styles.table}>
+          <Table className="primary-font">
             <TableHead>
               <TableRow>
-                <TableCell style={styles.table}>
+                <TableCell>
                   Nazwa
                 </TableCell>
-                <TableCell style={styles.table}>
+                <TableCell>
                   Czas trwania
                 </TableCell>
-                <TableCell style={styles.table}>
+                <TableCell>
                   Cena
                 </TableCell>
-                <TableCell style={styles.table}>
+                <TableCell>
 
                 </TableCell>
               </TableRow>
@@ -105,17 +101,17 @@ class Offer extends Component<OfferProps, OfferState> {
             <TableBody>
               {this.state.services.map(service  => {
                return (<TableRow>
-                  <TableCell style={styles.table}>
+                  <TableCell>
                     {service.name}
                   </TableCell>
-                  <TableCell style={styles.table}>
+                  <TableCell>
                     {service.duration}
                   </TableCell >
-                  <TableCell style={styles.table}>
+                  <TableCell>
                     {service.price}
                   </TableCell>
-                  <TableCell style={styles.table}>
-                  <Button className="primaryButton" style={styles.button}>
+                  <TableCell>
+                  <Button variant='raised'color='primary' size='small'>
                     Rezerwuj
                   </Button>
                   </TableCell>
@@ -128,6 +124,6 @@ class Offer extends Component<OfferProps, OfferState> {
       </Grid>
     );
   }
-}
+})
 
 export default Offer;
