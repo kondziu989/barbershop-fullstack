@@ -18,7 +18,7 @@ app.use(
     graphiql: true
   })
 );
-
+//TODO add token middleware
 const PORT = process.env.PORT || 3001;
 
 app.listen(PORT);
