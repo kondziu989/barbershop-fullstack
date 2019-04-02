@@ -6,6 +6,10 @@ import{
   Link
 } from 'react-router-dom'
 
+//redux
+import store from './components/store'
+import { Provider } from 'react-redux';
+
 //components
 import Header from './components/headerComponent/Header'
 import Footer from './components/footerComponent/Footer'
@@ -32,6 +36,7 @@ import './Assets/css/main.css'
 class App extends Component {
   render() {
     return (
+      <Provider store={store}>
       <MuiThemeProvider theme = {theme}>
       <Router>
           <Header />
@@ -42,6 +47,7 @@ class App extends Component {
           <Footer />
       </Router>
       </MuiThemeProvider>
+      </Provider>
     );
   }
 }

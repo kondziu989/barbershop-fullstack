@@ -8,7 +8,9 @@ import '../../Assets/css/offer/offer.css'
 import { Table, TableHead, TableRow, TableBody, TableCell, Button } from '@material-ui/core';
 import { throws } from 'assert';
 
-
+//redux
+import { connect } from 'react-redux'; 
+import { fetchServices } from '../../actions/postAction';
 //components
 const styles = (theme:Theme) => createStyles({
 table: {
@@ -37,42 +39,43 @@ services
 }
 `
 interface OfferProps extends WithStyles<typeof styles>{
-  
+  fetchServices: any
+  posts: Array<Service>
 }
 interface OfferState{
   services: Array<Service>
 }
 const Offer = withStyles(styles)(class extends Component<OfferProps, OfferState> {
 
-  constructor(props: any){
-    super(props);
-    this.state = { 
-    services: []
-    };
-}
+  // constructor(props: any){
+  //   super(props);
+  //   this.state = { 
+  //   services: []
+  //   };
+//}
   componentDidMount(){
-    this.fetchData(); 
-  }
+    this.props.fetchServices(); 
+ }
 
-  fetchData(){
-    fetch('https://mohawkbarbershop.herokuapp.com/graphql', {
-  method: 'POST',
-  headers: {
-    //'Accept': 'application/json',
-    'Content-Type': 'application/json',
-  },
-  body: JSON.stringify({
-    query
-  })
-})
-  .then(res=>res.json())
-  .then(data=>{
-    this.setState({services:data.data.services})
-    console.log(data.data.services)
-  }
-  )
-  .catch(error => console.log(error));
-}  
+//   fetchData(){
+//     fetch('https://mohawkbarbershop.herokuapp.com/graphql', {
+//   method: 'POST',
+//   headers: {
+//     //'Accept': 'application/json',
+//     'Content-Type': 'application/json',
+//   },
+//   body: JSON.stringify({
+//     query
+//   })
+// })
+//   .then(res=>res.json())
+//   .then(data=>{
+//     this.setState({services:data.data.services})
+//     console.log(data.data.services)
+//   }
+//   )
+//   .catch(error => console.log(error));
+// }  
 
 
   render() {
@@ -99,7 +102,7 @@ const Offer = withStyles(styles)(class extends Component<OfferProps, OfferState>
               </TableRow>
             </TableHead>
             <TableBody>
-              {this.state.services.map(service  => {
+              {this.props.posts.map(service  => {
                return (<TableRow>
                   <TableCell>
                     {service.name}
@@ -126,4 +129,7 @@ const Offer = withStyles(styles)(class extends Component<OfferProps, OfferState>
   }
 })
 
-export default Offer;
+const mapStateToProps = (state:any) => ({
+  posts: state.items
+})
+export default connect(mapStateToProps, { fetchServices })(Offer);
