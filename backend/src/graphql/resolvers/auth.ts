@@ -11,52 +11,60 @@ interface UserData {
 //TODO add input validation
 const register = async ({ userInput }) => {
   const newUser: UserData = userInput;
-  try {
-    const doesExist = await db
-      .select("email")
-      .from("users")
-      .where("email", "=", newUser.email);
-    if (doesExist.length === 0) {
-      const hashedPassword = await bcrypt.hash(newUser.password, 12);
-      const userData = {
-        email: newUser.email,
-        password: hashedPassword,
-        status: "user"
-      };
-      const user = await db.transaction(async trx => {
-        try {
-          const createdUser = await trx("users")
-            .insert(userData)
-            .returning("*");
-          const customerData = {
-            firstname: newUser.firstName,
-            lastname: newUser.lastName,
-            phone: newUser.phone,
-            idu: createdUser[0].idu,
-            joined: new Date()
-          };
-          const createdCustomer = await trx("customers")
-            .insert(customerData)
-            .returning("*");
-          trx.commit;
-          return {
-            idU: createdUser[0].idu,
-            email: createdUser[0].email,
-            firstName: createdCustomer[0].firstname,
-            lastName: createdCustomer[0].lastname,
-            phone: createdCustomer[0].phone
-          };
-        } catch (e) {
-          trx.rollback;
-          throw e;
-        }
-      });
-      return {
-        ...user
-      };
+  if(
+    newUser.email!=="" 
+    && newUser.password !==""
+    && newUser.firstName !==""
+    && newUser.lastName !==""
+    && newUser.phone !==""
+    ){
+    try {
+      const doesExist = await db
+        .select("email")
+        .from("users")
+        .where("email", "=", newUser.email);
+      if (doesExist.length === 0) {
+        const hashedPassword = await bcrypt.hash(newUser.password, 12);
+        const userData = {
+          email: newUser.email,
+          password: hashedPassword,
+          status: "user"
+        };
+        const user = await db.transaction(async trx => {
+          try {
+            const createdUser = await trx("users")
+              .insert(userData)
+              .returning("*");
+            const customerData = {
+              firstname: newUser.firstName,
+              lastname: newUser.lastName,
+              phone: newUser.phone,
+              idu: createdUser[0].idu,
+              joined: new Date()
+            };
+            const createdCustomer = await trx("customers")
+              .insert(customerData)
+              .returning("*");
+            trx.commit;
+            return {
+              idU: createdUser[0].idu,
+              email: createdUser[0].email,
+              firstName: createdCustomer[0].firstname,
+              lastName: createdCustomer[0].lastname,
+              phone: createdCustomer[0].phone
+            };
+          } catch (e) {
+            trx.rollback;
+            throw e;
+          }
+        });
+        return {
+          ...user
+        };
+      }
+    } catch (e) {
+      throw e;
     }
-  } catch (e) {
-    throw e;
   }
 };
 //TODO add tokens
