@@ -26,14 +26,42 @@ type Service{
     duration: Int
 }
 
+type AuthData {
+    userId: Int
+    token: String
+    tokenExpiration: Int
+}
+
+input UserInput {
+    email: String!
+    password: String!
+    firstName: String!
+    lastName: String!
+    phone: String
+}
+
+type User {
+    idU: Int
+    email: String
+    firstName: String
+    lastName: String
+    phone: String
+}
+
 type RootQuery {
     barbers: [Barber!]!
     products: [Product!]!
     services: [Service!]!
+    login(email: String!, password: String!) : AuthData
+}
+
+type RootMutation {
+    register(userInput: UserInput!) : User
 }
 
 schema {
     query: RootQuery
+    mutation: RootMutation
 }
 
 `);
