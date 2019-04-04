@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux'
-import postReducer from './postReducer'
+import {servicesReducer} from "./servicesReducer"
 
 export default combineReducers({
-    posts: postReducer
+    services: servicesReducer
 })
