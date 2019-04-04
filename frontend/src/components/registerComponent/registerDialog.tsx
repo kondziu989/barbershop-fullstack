@@ -16,7 +16,7 @@ export default class RegisterDialog extends React.Component {
   
     render() {
       return (
-        <div>
+        <>
           <Button variant="outlined" color="primary" onClick={this.handleClickOpen}>
             Zarejestruj się
           </Button>
@@ -70,7 +70,7 @@ export default class RegisterDialog extends React.Component {
               </Button>
             </DialogActions>
           </Dialog>
-        </div>
+        </>
       );
     }
   }

@@ -1,7 +1,6 @@
 import React from "react";
 import { Button, Dialog, DialogTitle, DialogContent, DialogContentText, TextField, DialogActions } from "@material-ui/core";
-
-export default class LoginDialog extends React.Component {
+class LoginDialog extends React.Component {
     state = {
       open: false,
     };
@@ -16,7 +15,7 @@ export default class LoginDialog extends React.Component {
   
     render() {
       return (
-        <div>
+        <>
           <Button variant="outlined" color="primary" onClick={this.handleClickOpen}>
             Zaloguj się
           </Button>
@@ -56,7 +55,9 @@ export default class LoginDialog extends React.Component {
               </Button>
             </DialogActions>
           </Dialog>
-        </div>
+        </>
       );
     }
   }
+
+export default LoginDialog;

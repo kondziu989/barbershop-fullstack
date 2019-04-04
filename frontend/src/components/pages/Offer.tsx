@@ -10,7 +10,7 @@ import { throws } from 'assert';
 
 //redux
 import { connect } from 'react-redux'; 
-import { fetchServices } from '../../actions/postAction';
+import { fetchServices } from '../../actions/servicesAction';
 //components
 const styles = (theme:Theme) => createStyles({
 table: {
@@ -18,9 +18,6 @@ table: {
   }
 });
 
-// interface Props extends WithStyles<typeof styles>{
-  
-// }
 interface Service {
   idS: number;
   name: string;
@@ -40,46 +37,18 @@ services
 `
 interface OfferProps extends WithStyles<typeof styles>{
   fetchServices: any
-  posts: Array<Service>
-}
-interface OfferState{
   services: Array<Service>
+  err: String,
+  pending: Boolean
 }
-const Offer = withStyles(styles)(class extends Component<OfferProps, OfferState> {
+const Offer = withStyles(styles)(class extends Component<OfferProps, {}> {
 
-  // constructor(props: any){
-  //   super(props);
-  //   this.state = { 
-  //   services: []
-  //   };
-//}
   componentDidMount(){
-    this.props.fetchServices(); 
+    this.props.fetchServices()
  }
 
-//   fetchData(){
-//     fetch('https://mohawkbarbershop.herokuapp.com/graphql', {
-//   method: 'POST',
-//   headers: {
-//     //'Accept': 'application/json',
-//     'Content-Type': 'application/json',
-//   },
-//   body: JSON.stringify({
-//     query
-//   })
-// })
-//   .then(res=>res.json())
-//   .then(data=>{
-//     this.setState({services:data.data.services})
-//     console.log(data.data.services)
-//   }
-//   )
-//   .catch(error => console.log(error));
-// }  
-
-
   render() {
-    const { classes } = this.props
+    console.log(this.props)
     return (
       <Grid container justify="center">
       <Grid container className = "content" justify="center" item xs={9}>
@@ -102,7 +71,7 @@ const Offer = withStyles(styles)(class extends Component<OfferProps, OfferState>
               </TableRow>
             </TableHead>
             <TableBody>
-              {this.props.posts.map(service  => {
+              {this.props.services.map(service  => {
                return (<TableRow>
                   <TableCell>
                     {service.name}
@@ -129,7 +98,17 @@ const Offer = withStyles(styles)(class extends Component<OfferProps, OfferState>
   }
 })
 
-const mapStateToProps = (state:any) => ({
-  posts: state.items
-})
-export default connect(mapStateToProps, { fetchServices })(Offer);
+const mapStateToProps = (state:any) => {
+  return{
+    services: state.services.services,
+    err: state.services.err,
+    pending: state.services.pending
+  }
+}
+
+const mapDispatchToProps = (dispatch: any) => {
+  return {
+    fetchServices: () => dispatch(fetchServices())
+  }
+}
+export default connect(mapStateToProps, mapDispatchToProps)(Offer);
