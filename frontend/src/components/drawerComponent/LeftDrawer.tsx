@@ -18,6 +18,9 @@ const styles = {
     fullList: {
       width: 'auto',
     },
+    icon: {
+      color: 'white',
+    }
   };
 
 
@@ -26,12 +29,12 @@ const styles = {
 
 class TemporaryDrawer extends React.Component<DrawerProps> {
     state = {
-      left: false,
+      right: false,
     };
   
     toggleDrawer = (open: any) => () => {
       this.setState({
-        left: open,
+        right: open,
       });
     };
   
@@ -67,10 +70,10 @@ class TemporaryDrawer extends React.Component<DrawerProps> {
       );
   
       return (
-        <div>
-            <IconButton onClick={this.toggleDrawer(true)}><MenuIcon></MenuIcon></IconButton>
+        <>
+            <MenuIcon className={classes.icon} onClick={this.toggleDrawer(true)}></MenuIcon>
           {/* <Button onClick={this.toggleDrawer(true)}>Open Left</Button> */}
-          <Drawer open={this.state.left} onClose={this.toggleDrawer(false)}>
+          <Drawer anchor='right' open={this.state.right} onClose={this.toggleDrawer(false)}>
             <div
               tabIndex={0}
               role="button"
@@ -80,7 +83,7 @@ class TemporaryDrawer extends React.Component<DrawerProps> {
               {sideList}
             </div>
           </Drawer>
-        </div>
+        </>
       );
     }
   }

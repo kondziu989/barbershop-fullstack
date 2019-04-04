@@ -1,10 +1,18 @@
 import React from "react";
 import { Button, Dialog, DialogTitle, DialogContent, DialogContentText, TextField, DialogActions } from "@material-ui/core";
+
+
+interface loginData{
+  email:String,
+  password:String
+}
 class LoginDialog extends React.Component {
     state = {
       open: false,
+      email:"",
+      password:""
     };
-  
+
     handleClickOpen = () => {
       this.setState({ open: true });
     };
@@ -12,7 +20,16 @@ class LoginDialog extends React.Component {
     handleClose = () => {
       this.setState({ open: false });
     };
-  
+
+    handleEmailChange = (event: any) =>{
+      this.setState({email:event.target.value})
+      console.log(this.state)
+    }
+
+    handlePasswordChange = (event: any) =>{
+      this.setState({password: event.target.value})
+      console.log(this.state)
+    }
     render() {
       return (
         <>
@@ -36,6 +53,7 @@ class LoginDialog extends React.Component {
                 label="Email"
                 type="email"
                 fullWidth
+                onChange={this.handleEmailChange}
               />
               <TextField
                 margin="dense"
@@ -43,6 +61,7 @@ class LoginDialog extends React.Component {
                 label="Hasło"
                 type="password"
                 fullWidth
+                onChange={this.handlePasswordChange}
               />
             
             </DialogContent>

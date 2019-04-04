@@ -83,7 +83,7 @@ const Offer = withStyles(styles)(class extends Component<OfferProps, {}> {
                     {service.price}
                   </TableCell>
                   <TableCell>
-                  <Button variant='raised'color='primary' size='small'>
+                  <Button variant='outlined'color='primary' size='small'>
                     Rezerwuj
                   </Button>
                   </TableCell>

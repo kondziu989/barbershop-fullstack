@@ -4,6 +4,7 @@ import logo from './logo.png'
 import { AppBar, Grid } from '@material-ui/core';
 import RegisterDialog from '../registerComponent/registerDialog'
 import LoginDialog from '../loginComponent/LoginDialog';
+import LeftDrawer from '../drawerComponent/LeftDrawer';
 class Header extends Component{
     render(){
         return(
@@ -44,6 +45,9 @@ class Header extends Component{
                     </li>
                     <li>
                         <Link to="/team">Zespół</Link>
+                    </li>
+                    <li>
+                        <LeftDrawer></LeftDrawer>
                     </li>
                 </ul>
             </nav> 
