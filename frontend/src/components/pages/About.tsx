@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
-
 import '../../Assets/css/about/about.css'
 import image from '../../photos/salon1.jpg'
 //components
 
 
-class Footer extends Component {
+class About extends Component {
   render() {
     return (
         <div className='container-fluid content'>
@@ -76,4 +75,4 @@ class Footer extends Component {
   }
 }
 
-export default Footer;
+export default About;
