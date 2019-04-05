@@ -1,24 +1,40 @@
 import React from "react";
 import { Button, Dialog, DialogTitle, DialogContent, DialogContentText, TextField, DialogActions } from "@material-ui/core";
+import {handleLogin, UserCredencials} from '../../actions/loginAction';
+import { connect } from 'react-redux'; 
 
-
-interface loginData{
-  email:String,
-  password:String
+interface UserData {
+  firstName: String,
+  token: String,
+  tokenExpiration: 1
 }
-class LoginDialog extends React.Component {
-    state = {
-      open: false,
-      email:"",
-      password:""
-    };
+
+interface LoginDialogProps{
+  submitLogin: Function,
+  userData: UserData
+}
+
+interface LoginDialogState{
+  open: boolean,
+  email: String,
+  password: String
+}
+
+class LoginDialog extends React.Component<LoginDialogProps, LoginDialogState> {
+
+     readonly state : LoginDialogState = {
+        open: false,
+        email:"",
+        password:""
+      };
+    
 
     handleClickOpen = () => {
-      this.setState({ open: true });
+      this.setState({open: true });
     };
   
     handleClose = () => {
-      this.setState({ open: false });
+      this.setState({open: false });
     };
 
     handleEmailChange = (event: any) =>{
@@ -30,7 +46,13 @@ class LoginDialog extends React.Component {
       this.setState({password: event.target.value})
       console.log(this.state)
     }
+
+    handleLogin = () => {
+      const {email, password} = this.state;
+      this.props.submitLogin({email, password});
+    }
     render() {
+      console.log(this.props.userData)
       return (
         <>
           <Button variant="outlined" color="primary" onClick={this.handleClickOpen}>
@@ -69,7 +91,7 @@ class LoginDialog extends React.Component {
               <Button onClick={this.handleClose} color="primary">
                 Anuluj
               </Button>
-              <Button onClick={this.handleClose} color="primary">
+              <Button onClick={this.handleLogin} color="primary">
                 Zaloguj
               </Button>
             </DialogActions>
@@ -78,5 +100,16 @@ class LoginDialog extends React.Component {
       );
     }
   }
+  const mapStateToProps = (state : any) => {
+    return{
+      userData: state.userData
+    }
+  }
 
-export default LoginDialog;
+  const mapDispatchToProps = (dispatch: any) => {
+    return {
+      submitLogin: (userCredencials : UserCredencials) => dispatch(handleLogin(userCredencials))
+    }
+  }
+
+export default connect(mapStateToProps, mapDispatchToProps)(LoginDialog);

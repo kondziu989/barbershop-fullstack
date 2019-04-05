@@ -1,4 +1,5 @@
 import db from "../../db";
+const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 
 interface UserData {
@@ -84,12 +85,23 @@ const login = async ({
       const storedPassword : String = userCredencials[0].password;
       if (bcrypt.compareSync(password, storedPassword)) {
         const userData = await db
-          .select("idu")
+          .select("*")
           .from("users")
+          .leftJoin("customers","users.idu","customers.idu")
           .where({ email });
+        const token = jwt.sign(
+          {
+            userId: userData[0].idu,
+            email: userData[0].email
+          },
+          "supersecretkey",
+          {
+            expiresIn: '1h'
+          }
+        )
         return {
-          userId: userData[0].idu,
-          token: "token",
+          firstName: userData[0].firstname,
+          token: token,
           tokenExpiration: 1
         };
       }
