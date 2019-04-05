@@ -92,10 +92,7 @@ const login = async ({
         const token = jwt.sign(
           {
             userId: userData[0].idu,
-            email: userData[0].email,
-            firstName: userData[0].firstname,
-            lastName: userData[0].lastname,
-            phone: userData[0].phone
+            email: userData[0].email
           },
           "supersecretkey",
           {
@@ -103,7 +100,7 @@ const login = async ({
           }
         )
         return {
-          userId: userData[0].idu,
+          firstName: userData[0].firstname,
           token: token,
           tokenExpiration: 1
         };

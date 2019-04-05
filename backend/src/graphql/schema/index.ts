@@ -27,7 +27,7 @@ type Service{
 }
 
 type AuthData {
-    userId: Int
+    firstName: String
     token: String
     tokenExpiration: Int
 }
