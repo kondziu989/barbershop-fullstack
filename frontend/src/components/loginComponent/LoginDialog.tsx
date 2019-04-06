@@ -1,6 +1,6 @@
 import React from "react";
 import { Button, Dialog, DialogTitle, DialogContent, DialogContentText, TextField, DialogActions } from "@material-ui/core";
-import {handleLogin, UserCredencials} from '../../actions/loginAction';
+import {handleLogin, UserCredencials, openLoginDialog, closeLoginDialog} from '../../actions/loginAction';
 import { connect } from 'react-redux'; 
 
 interface UserData {
@@ -10,12 +10,14 @@ interface UserData {
 }
 
 interface LoginDialogProps{
+  openDialog: Function,
+  closeDialog: Function,
   submitLogin: Function,
-  userData: UserData
+  userData: UserData,
+  isOpen: boolean
 }
 
 interface LoginDialogState{
-  open: boolean,
   email: String,
   password: String
 }
@@ -23,43 +25,41 @@ interface LoginDialogState{
 class LoginDialog extends React.Component<LoginDialogProps, LoginDialogState> {
 
      readonly state : LoginDialogState = {
-        open: false,
         email:"",
         password:""
       };
     
 
-    handleClickOpen = () => {
-      this.setState({open: true });
+    handleOpen = () => {
+      this.props.openDialog()
     };
   
     handleClose = () => {
-      this.setState({open: false });
+      this.props.closeDialog()
     };
 
-    handleEmailChange = (event: any) =>{
+    handleEmailChange = (event: any) => {
       this.setState({email:event.target.value})
-      console.log(this.state)
     }
 
-    handlePasswordChange = (event: any) =>{
+    handlePasswordChange = (event: any) => {
       this.setState({password: event.target.value})
-      console.log(this.state)
     }
 
     handleLogin = () => {
       const {email, password} = this.state;
-      this.props.submitLogin({email, password});
+      if(email.length > 0 && password.length > 0){
+        this.props.submitLogin({email, password});
+      }
     }
     render() {
-      console.log(this.props.userData)
       return (
         <>
-          <Button variant="outlined" color="primary" onClick={this.handleClickOpen}>
+          <Button variant="outlined" color="primary" onClick={this.handleOpen}>
             Zaloguj się
           </Button>
           <Dialog
-            open={this.state.open}
+            open={this.props.isOpen}
             onClose={this.handleClose}
             aria-labelledby="form-dialog-title"
           >
@@ -102,12 +102,15 @@ class LoginDialog extends React.Component<LoginDialogProps, LoginDialogState> {
   }
   const mapStateToProps = (state : any) => {
     return{
-      userData: state.userData
+      isOpen: state.login.isOpen,
+      userData: state.login.userData
     }
   }
 
   const mapDispatchToProps = (dispatch: any) => {
     return {
+      openDialog: () => dispatch(openLoginDialog()),
+      closeDialog: () => dispatch(closeLoginDialog()),
       submitLogin: (userCredencials : UserCredencials) => dispatch(handleLogin(userCredencials))
     }
   }

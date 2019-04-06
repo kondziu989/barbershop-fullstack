@@ -2,6 +2,7 @@ import React from "react";
 import { Button, Dialog, DialogTitle, DialogContent, DialogContentText, TextField, DialogActions, InputAdornment, IconButton, FormControl, SnackbarContent, LinearProgress } from "@material-ui/core";
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
+import { reject } from "q";
 
 
 interface Error{
@@ -24,15 +25,25 @@ enum Status{
   rejected
 }
 
-const query = (data: NewUser) => 
-`mutation {
-  register(UserInput:${data}) {
-    firstName
-    idU
-    email
+const query = (data: NewUser) => {
+  return (
+    JSON.stringify(
+      {
+      query: `mutation {
+      register(userInput: {
+        email: "${data.email}",
+        password: "${data.password}",
+        firstName: "${data.firstname}",
+        lastName: "${data.lastname}",
+        phone: "${data.phone}"
+      })
+    }
+    `
   }
+  )
+  )
 }
-`
+
 
 export default class RegisterDialog extends React.Component {
   readonly EMAIL = 1;
@@ -55,22 +66,28 @@ export default class RegisterDialog extends React.Component {
       status: Status.none
     };
 
-    
-
-    
     fetchNewUser = () =>{
-        fetch("https://mohawkbarbershop.herokuapp.com/graphql", {
+        const userData : NewUser = {
+          email: this.state.email,
+          password: this.state.password,
+          firstname: this.state.firstname,
+          lastname: this.state.lastname,
+          phone: this.state.phone
+        }
+        fetch("http://localhost:3001/graphql", {
           method: "POST",
           headers: {
             //'Accept': 'application/json',
             "Content-Type": "application/json"
           },
-          body: JSON.stringify({
-            query
-          })
+          body: query(userData)
         })
           .then(res => res.json())
-          .then(data => {this.setState({ response:data.data.register.status})})
+          .then(data => {
+            console.log(data.data)
+            this.setState({status: Status.accepted ,response:data.data.register})
+          })
+          .catch(data => this.setState({status: Status.rejected}))
     }
 
     handleClickOpen = () => {
@@ -86,7 +103,6 @@ export default class RegisterDialog extends React.Component {
 
     handleAccept = () => {
       this.validateInput();
-      console.log(this.state);
     }
     validateInput = () => {
       const errors: Array<Error> = []
@@ -98,8 +114,8 @@ export default class RegisterDialog extends React.Component {
       this.setState({errors:errors})
 
       if(errors.length===0){
-        //this.fetchNewUser()
         this.setState({status: Status.pending})
+        this.fetchNewUser()
       }
     }
 
@@ -164,27 +180,22 @@ export default class RegisterDialog extends React.Component {
     
     handleEmailChange = (event: any) =>{
       this.setState({email:event.target.value})
-      console.log(this.state)
     }
 
     handlePasswordChange = (event: any) =>{
       this.setState({password: event.target.value})
-      console.log(this.state)
     }
 
     handleFirstNameChange = (event: any) =>{
       this.setState({firstname: event.target.value})
-      console.log(this.state)
     }
 
     handleLastNameChange = (event: any) =>{
       this.setState({lastname: event.target.value})
-      console.log(this.state)
     }
 
     handlePhoneChange = (event: any) =>{
       this.setState({phone: event.target.value})
-      console.log(this.state)
     }
 
     showLinearQuery = () => {
@@ -192,7 +203,7 @@ export default class RegisterDialog extends React.Component {
       return this.state.status===Status.pending?<LinearProgress color="primary" variant="query"/>:null
 
     }
-  
+   //TODO add display success msg and fail msg
     render() {
       return (
         <>

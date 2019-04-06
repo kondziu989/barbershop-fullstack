@@ -4,5 +4,5 @@ import {loginReducer} from "./loginReducer";
 
 export default combineReducers({
     services: servicesReducer,
-    userData: loginReducer
+    login: loginReducer
 })

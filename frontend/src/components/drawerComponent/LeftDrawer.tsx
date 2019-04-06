@@ -59,7 +59,7 @@ class TemporaryDrawer extends React.Component<DrawerProps> {
           </List>
           <Divider />
           <List>
-            {['All mail', 'Trash', 'Spam'].map((text, index) => (
+            {['Rejestracje', 'Zamówienia', 'Moje konto'].map((text, index) => (
               <ListItem button key={text}>
                 <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
                 <ListItemText primary={text} />

@@ -31,7 +31,7 @@ const register = async ({ userInput }) => {
           password: hashedPassword,
           status: "user"
         };
-        const user = await db.transaction(async trx => {
+        const status = await db.transaction(async trx => {
           try {
             const createdUser = await trx("users")
               .insert(userData)
@@ -47,25 +47,23 @@ const register = async ({ userInput }) => {
               .insert(customerData)
               .returning("*");
             trx.commit;
-            return {
-              idU: createdUser[0].idu,
-              email: createdUser[0].email,
-              firstName: createdCustomer[0].firstname,
-              lastName: createdCustomer[0].lastname,
-              phone: createdCustomer[0].phone
-            };
+            return true;
           } catch (e) {
             trx.rollback;
-            throw e;
+            return false;
           }
         });
-        return {
-          ...user
-        };
+        return status;
+      }
+      else {
+        return false;
       }
     } catch (e) {
       throw e;
     }
+  }
+  else {
+    return false;
   }
 };
 //TODO add tokens
@@ -105,9 +103,13 @@ const login = async ({
           tokenExpiration: 1
         };
       }
+      else {
+        return null;
+      }
     }
   } catch (e) {
     console.log(e);
+    return false
   }
 };
 

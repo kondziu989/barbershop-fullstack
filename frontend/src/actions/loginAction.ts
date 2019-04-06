@@ -1,4 +1,4 @@
-import {HADLE_LOGIN_PENDING,HADLE_LOGIN_ERROR,HADLE_LOGIN_SUCCESS} from "./types";
+import {HADLE_LOGIN_PENDING,HADLE_LOGIN_ERROR,HADLE_LOGIN_SUCCESS, OPEN_LOGIN_DIALOG, CLOSE_LOGIN_DIALOG} from "./types";
 
 const query = (credencials: UserCredencials) =>{
 return (
@@ -16,8 +16,17 @@ export interface UserCredencials {
     password: String
 }
 
+export const openLoginDialog = () => ({
+    type: OPEN_LOGIN_DIALOG,
+    payload: true
+})
+
+export const closeLoginDialog = () => ({
+    type: CLOSE_LOGIN_DIALOG,
+    payload: false
+})
+
 export const handleLogin = (credencials : UserCredencials) =>(dispatch: any) => {
-    console.log(JSON.stringify(query(credencials)));
     dispatch({type: HADLE_LOGIN_PENDING});
     fetch("http://localhost:3001/graphql", {
         method: "POST",

@@ -36,6 +36,7 @@
     "not op_mini all"
   ],
   "devDependencies": {
-    "@types/react-redux": "^7.0.6"
+    "@types/react-redux": "^7.0.6",
+    "redux-devtools-extension": "^2.13.8"
   }
 }

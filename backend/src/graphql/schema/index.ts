@@ -40,14 +40,6 @@ input UserInput {
     phone: String
 }
 
-type User {
-    idU: Int
-    email: String
-    firstName: String
-    lastName: String
-    phone: String
-}
-
 type RootQuery {
     barbers: [Barber!]!
     products: [Product!]!
@@ -56,7 +48,7 @@ type RootQuery {
 }
 
 type RootMutation {
-    register(userInput: UserInput!) : User
+    register(userInput: UserInput!) : Boolean!
 }
 
 schema {
