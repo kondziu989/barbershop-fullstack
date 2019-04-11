@@ -2,9 +2,11 @@ import { combineReducers } from 'redux'
 import {servicesReducer} from "./servicesReducer";
 import {loginReducer} from "./loginReducer";
 import {registerReducer} from "./registerReducer";
+import {productsReducer} from "./productsReducer";
 
 export default combineReducers({
     services: servicesReducer,
     login: loginReducer,
-    register: registerReducer
+    register: registerReducer,
+    products: productsReducer,
 })

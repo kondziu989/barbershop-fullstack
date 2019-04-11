@@ -29,7 +29,9 @@ class Header extends Component{
                 <div className = "logo">
                     <img src={logo} alt='' width='100px'></img>
                     <div className="logoTitle"><span className="primary-font">Mohawk </span>Barbershop</div>
-                
+                    <RegisterDialog></RegisterDialog>
+                    <LoginDialog></LoginDialog>
+
                 </div>
             </div>
             <nav>
@@ -52,8 +54,6 @@ class Header extends Component{
                 </ul>
             </nav> 
             <Grid container>    
-                <RegisterDialog></RegisterDialog>
-                <LoginDialog></LoginDialog>
                 </Grid>
             </header>
         );
