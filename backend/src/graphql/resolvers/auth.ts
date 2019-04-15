@@ -1,5 +1,5 @@
 import db from "../../db";
-const jwt = require("jsonwebtoken");
+import jwt from "../../dependencies";
 const bcrypt = require("bcryptjs");
 
 interface UserData {

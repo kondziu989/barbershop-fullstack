@@ -1,4 +1,4 @@
-interface Product {
+export interface Product {
     idp: Number,
     name: String,
     category: String,
