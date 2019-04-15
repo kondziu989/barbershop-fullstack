@@ -61,7 +61,8 @@ const styles = createStyles({
     category: String,
     brand: String,
     price: number,
-    description: String
+    description: String,
+    addToCart: Function
   }
 
 
@@ -73,6 +74,11 @@ const ProductCardComponent = class extends Component<ProductProps, {}> {
         this.setState(state => ({ expanded: !this.state.expanded }));
       };
 
+
+      handleAddToCartClick = () => {
+        console.log("CLICKED" + this.props.IdP)
+        this.props.addToCart(this.props.IdP, this.props.price)
+      } 
 
   render() {
     const { classes } = this.props
@@ -103,7 +109,9 @@ const ProductCardComponent = class extends Component<ProductProps, {}> {
           <IconButton aria-label="Add to favorites">
             <FavoriteIcon />
           </IconButton>
-          <IconButton aria-label="Share">
+          <IconButton 
+            aria-label="Share"
+            onClick={this.handleAddToCartClick}>
             <AddToCartIcon />
           </IconButton>
           <IconButton

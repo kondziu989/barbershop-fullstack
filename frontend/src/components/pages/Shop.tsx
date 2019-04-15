@@ -1,13 +1,20 @@
 import React, { Component } from 'react';
 
 import '../../Assets/css/shop/shop.css'
-import { Grid, FormControl, FormLabel, RadioGroup, FormControlLabel, Radio, createStyles, Theme, withStyles, WithStyles, CircularProgress, Button, InputLabel, Select, MenuItem } from '@material-ui/core';
+import { Grid, FormControl, FormLabel, RadioGroup, FormControlLabel, Radio, createStyles, Theme, withStyles, WithStyles, CircularProgress, Button, InputLabel, Select, MenuItem, Typography } from '@material-ui/core';
 import ProductCardComponent from '../productCardComponent/ProductCardComponent';
+import { BrowserRouter, Route, Link } from 'react-router-dom'
 
 //redux
 import { connect } from 'react-redux';
 import { fetchProducts } from '../../actions/productsAction'
+import { addToCart } from '../../actions/cartActions'
 import { timingSafeEqual } from 'crypto';
+import { CartItem } from '../../reducers/cartReducer'
+
+//icons
+import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
+
 
 const styles = ({palette, spacing}: Theme ) => createStyles({
   root: {
@@ -21,6 +28,12 @@ const styles = ({palette, spacing}: Theme ) => createStyles({
   },
   cont:{
     marginBottom: "20px"
+  },
+  cart:{
+    '&:hover':{
+        color: palette.primary.main,
+        cursor: 'pointer'
+    }
   }
 });
 
@@ -38,7 +51,12 @@ interface ShopProps extends WithStyles<typeof styles>{
   products: Array<Product>
   err: String
   pending: Boolean
+  cart: Array<CartItem>
+  addToCart: Function
+  total: number
 }
+
+const MyLink = (props: any) => <Link to="/cart" {...props} />;
 
 const Shop = class extends Component<ShopProps, {}>{
   state={
@@ -60,7 +78,7 @@ const Shop = class extends Component<ShopProps, {}>{
     } else if (products.length > 0) {
       return products.map(product => {
         return product.category===this.state.category?(
-          <Grid item xs={4}>
+          <Grid item xs={12} sm={6} lg={4} xl={3}>
           <ProductCardComponent
           IdP={product.IdP}
           name={product.name}
@@ -68,6 +86,7 @@ const Shop = class extends Component<ShopProps, {}>{
           brand={product.brand}
           price={product.price}
           description={product.description}
+          addToCart = {this.props.addToCart}
           ></ProductCardComponent>
           </Grid>
         ):null;
@@ -75,12 +94,21 @@ const Shop = class extends Component<ShopProps, {}>{
     }
   };
 
+  cartItemsQuantity = () => {
+    var qtt = 0
+    this.props.cart.forEach((item) => qtt+= item.quantity)
+    return qtt
+  }
+
+  
+
+  //***********************RENDER********************************//
   render() {
     const { classes } = this.props
     return (
       <Grid container justify="center">
-      <Grid container className={"content " + classes.cont} justify="center" item xs={9} spacing={16}>
-        <Grid item xs={3}>
+      <Grid container className={"content " + classes.cont} justify="space-evenly" alignItems="center" item xs={9} spacing={16}>
+        <Grid item>
         <FormControl className={classes.formControl}>
           <InputLabel>Kategoria: </InputLabel>
           <Select
@@ -93,8 +121,12 @@ const Shop = class extends Component<ShopProps, {}>{
           </Select>
         </FormControl>
         </Grid>
+        <Grid item alignContent="center">
+           <Typography component={MyLink} className={classes.cart} variant="subtitle1" inline><ShoppingCartIcon></ShoppingCartIcon> {this.cartItemsQuantity()} szt. za </Typography>
+           <Typography variant="h6" inline color="primary">{(Math.round(this.props.total * 100) / 100).toFixed(2)} zł</Typography>
+        </Grid>
       </Grid>
-        <Grid container className = "content" justify="center" item xs={9} spacing = {32}>
+        <Grid container className = "content" justify="space-evenly" item xs={9} spacing = {32}>
           {this.displayProducts()}
         </Grid>
       </Grid>
@@ -106,13 +138,16 @@ const mapStateToProps = (state:any) => {
   return{
     products: state.products.products,
     err: state.products.err,
-    pending: state.products.pending
+    pending: state.products.pending,
+    cart: state.cart.cart,
+    total: state.cart.total
   }
 }
 
 const mapDispatchToProps = (dispatch: any) => {
   return {
-    fetchProducts: () => dispatch(fetchProducts())
+    fetchProducts: () => dispatch(fetchProducts()),
+    addToCart: (id:number, price:number) => dispatch(addToCart(id, price))
   }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Shop));
