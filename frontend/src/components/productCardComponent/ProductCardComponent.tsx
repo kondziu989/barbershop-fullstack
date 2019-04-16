@@ -20,9 +20,9 @@ import classes from '*.module.scss';
 const styles = createStyles({
     card: {
         width: "100%",
-        borderWidth:"3px",
-        borderColor:"primary",
-        boxShadow: '0 3px 5px 2px rgba(255, 193, 7, 1)',
+        borderWidth:"1px",
+        borderColor:"#efb943",
+        border: "solid",
       },
       media: {
         height: 0,
@@ -46,10 +46,10 @@ const styles = createStyles({
         },
 
       title:{
-        fontSize: "15px"
+        fontSize: "20px"
       },
       subheader:{
-        fontSize: "10px"
+        fontSize: "15px"
       }
   });
 
@@ -84,10 +84,10 @@ const ProductCardComponent = class extends Component<ProductProps, {}> {
         <CardHeader
           title={this.props.name}
           subheader={this.props.price + " zł"}
-          // classes={{
-          //   title=classes.title,
-          //   subheader=classes.subheader
-          // }}
+          classes={{
+            title: classes.title,
+            subheader: classes.subheader
+           }}
         />
         <CardMedia
           className={classes.media}
