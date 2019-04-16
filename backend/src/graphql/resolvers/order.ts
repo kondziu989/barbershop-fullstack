@@ -1,0 +1,94 @@
+import db from "../../db";
+import jwt from "../../dependencies";
+import { CustomerOrder } from "src/models/customerOrder";
+import { OrderProduct } from "src/models/orderProduct";
+
+const orders = async ({token} : {token: string}) => {
+    if(token.length > 0){
+        try {
+            const userData = jwt.verify(token, "supersecretkey");
+            const orders = await db.select("*")
+                                    .from("customerorders")
+                                    .join("orderproduct","customerorders.ido","orderproduct.ido")
+                                    .join("product","orderproduct.idp","product.idp")
+                                    .where("idc",userData.userId);
+            const orderIds = new Set();
+            orders.forEach(order => orderIds.add(order.ido))
+            const userOrders = new Map();
+            [...orderIds].forEach(orderId => {
+                const orderData = orders.filter(order => order.ido === orderId);
+                userOrders.set(orderId, {
+                IdO: orderData[0].ido,
+                status: orderData[0].status,
+                comment: orderData[0].comment,
+                totalPrice: 0.0,
+                orderDate: new Date(orderData[0].orderdate).toLocaleDateString(),
+                orderProducts: []
+                })
+            }
+            )
+            orders.forEach(order => {
+                userOrders.get(order.ido).orderProducts.push({
+                    IdP: order.idp,
+                    name: order.name,
+                    category: order.category,
+                    brand: order.brand,
+                    price: order.price,
+                    description: order.description,
+                    quantity: order.quantity
+                })
+            })
+            for(let order of userOrders.values()){
+                const totalPrice = order.orderProducts.reduce((prev, product) => {
+                    return prev + product.price * product.quantity
+                }, 0);
+                userOrders.get(order.IdO).totalPrice = totalPrice;
+            }
+            return userOrders.values();
+        } catch(err){
+            console.log(err)
+        }
+    }
+}
+
+const makeOrder = async ({token, order}) => {
+    if(token.length > 0){
+        const userData = jwt.verify(token, "supersecretkey");
+        try {
+            const status = await db.transaction(async trx => {
+                try {
+                    const newOrder : CustomerOrder = {
+                        comment: order.comment,
+                        idc: userData.userId,
+                        status: "pending",
+                        orderdate: new Date()
+                    }
+                    const createdOrderId = await trx("customerorders")
+                                                .insert(newOrder)
+                                                .returning("ido");
+                    const orderedProducts = order.orderProducts.map((product) => {
+                        return {
+                            idp: product.IdP,
+                            ido: createdOrderId[0],
+                            quantity: product.quantity
+                        }
+                    });
+                    await trx("orderproduct")
+                            .insert(orderedProducts);
+                    trx.commit;
+                    return true;
+                } catch(err) {
+                    console.log(err)
+                    trx.rollback
+                    return false;
+                }
+            })
+            return status;
+        } catch (err) {
+            console.log(err)
+            return false;
+        }
+    }
+}
+
+export {orders, makeOrder};

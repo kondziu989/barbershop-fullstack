@@ -1,4 +1,4 @@
-interface Barber {
+export interface Barber {
     idb: Number,
     name: String,
     firstname: String,
