@@ -3,7 +3,7 @@ Server build with node.js and express.js with graphql
 Frontend build with react + redux
 #### Api documentation 
 https://mohawkbarbershop.herokuapp.com/graphql
-####To run the app in dev mode:
+#### To run the app in dev mode:
 1. clone the repo
 2. cd frondend
 3. npm install to install dependencies
