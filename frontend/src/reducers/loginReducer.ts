@@ -1,4 +1,4 @@
-import {HADLE_LOGIN_PENDING,HADLE_LOGIN_ERROR,HADLE_LOGIN_SUCCESS, OPEN_LOGIN_DIALOG, CLOSE_LOGIN_DIALOG} from "../actions/types";
+import {HADLE_LOGIN_PENDING,HADLE_LOGIN_ERROR,HADLE_LOGIN_SUCCESS, OPEN_LOGIN_DIALOG, CLOSE_LOGIN_DIALOG, HANDLE_LOGOUT} from "../actions/types";
 
 const initialLoginState = {
   isOpen: false,
@@ -36,6 +36,8 @@ export const loginReducer = (state = initialLoginState, action: any) => {
           isPending: false,
           error: action.payload
         };
+      case HANDLE_LOGOUT:
+        return initialLoginState;
       default:
         return state;
     }

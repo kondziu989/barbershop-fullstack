@@ -1,4 +1,5 @@
 import db from '../../db';
+import { Product } from 'src/models/productModel';
 
 
 const products = async () => {

@@ -1,4 +1,4 @@
-import {HADLE_LOGIN_PENDING,HADLE_LOGIN_ERROR,HADLE_LOGIN_SUCCESS, OPEN_LOGIN_DIALOG, CLOSE_LOGIN_DIALOG} from "./types";
+import {HADLE_LOGIN_PENDING,HADLE_LOGIN_ERROR,HADLE_LOGIN_SUCCESS, OPEN_LOGIN_DIALOG, CLOSE_LOGIN_DIALOG, HANDLE_LOGOUT} from "./types";
 
 const query = (credencials: UserCredencials) =>{
 return (
@@ -28,7 +28,7 @@ export const closeLoginDialog = () => ({
 
 export const handleLogin = (credencials : UserCredencials) =>(dispatch: any) => {
     dispatch({type: HADLE_LOGIN_PENDING});
-    fetch("http://localhost:3001/graphql", {
+    fetch("https://mohawkbarbershop.herokuapp.com/graphql", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -41,6 +41,10 @@ export const handleLogin = (credencials : UserCredencials) =>(dispatch: any) => 
             type: HADLE_LOGIN_SUCCESS,
             payload: data.data.login
         })
+        dispatch({
+            type: CLOSE_LOGIN_DIALOG,
+            payload: false
+        })
     })
     .catch((err : any) => {
         dispatch({
@@ -49,3 +53,7 @@ export const handleLogin = (credencials : UserCredencials) =>(dispatch: any) => 
         })
     })
 }
+
+export const handleLogout = () =>({
+    type: HANDLE_LOGOUT
+})

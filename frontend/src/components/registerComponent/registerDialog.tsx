@@ -65,6 +65,7 @@ interface RegisterDialogProps {
   openDialog: Function;
   closeDialog: Function;
   openLogin: Function;
+  userData: any;
 }
 
 interface RegisterDialogState {
@@ -108,7 +109,7 @@ class RegisterDialog extends React.Component<
       lastname: this.state.lastname,
       phone: this.state.phone
     };
-    fetch("http://localhost:3001/graphql", {
+    fetch("https://mohawkbarbershop.herokuapp.com/graphql", {
       method: "POST",
       headers: {
         //'Accept': 'application/json',
@@ -374,7 +375,11 @@ class RegisterDialog extends React.Component<
 
   //TODO add display success msg and fail msg
   render() {
+    const {userData} = this.props;
     return (
+      (userData.firstName)?
+      <p style={{display: "inline-block", color: "white", marginRight: "20px"}}>{`Witaj, ${userData.firstName} ! `}</p>
+      :
       <>
         <Button
           variant="outlined"
@@ -399,7 +404,8 @@ class RegisterDialog extends React.Component<
 
 const mapStateToProps = (state: any) => {
   return {
-    isOpen: state.register.isOpen
+    isOpen: state.register.isOpen,
+    userData: state.login.userData
   };
 };
 
