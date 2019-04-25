@@ -1,4 +1,5 @@
 import db from "../../db";
+import { Barber } from "src/models/barberModel";
 
 const barbers = async () => {
   try {

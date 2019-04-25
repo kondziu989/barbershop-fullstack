@@ -12,7 +12,8 @@ import {
   handleLogin,
   UserCredencials,
   openLoginDialog,
-  closeLoginDialog
+  closeLoginDialog,
+  handleLogout
 } from "../../actions/loginAction";
 import { connect } from "react-redux";
 
@@ -26,6 +27,7 @@ interface LoginDialogProps {
   openDialog: Function;
   closeDialog: Function;
   submitLogin: Function;
+  logout: Function;
   userData: UserData;
   isOpen: boolean;
 }
@@ -63,8 +65,17 @@ class LoginDialog extends React.Component<LoginDialogProps, LoginDialogState> {
       this.props.submitLogin({ email, password });
     }
   };
+
+  handleLogout = () => {
+    this.props.logout();
+  }
   render() {
+    const {userData} = this.props;
     return (
+      (userData.token)
+      ?
+      <Button variant="outlined" color="primary" onClick={this.handleLogout}>Wyloguj</Button>
+      :
       <>
         <Button variant="outlined" color="primary" onClick={this.handleOpen}>
           Zaloguj się
@@ -108,6 +119,7 @@ class LoginDialog extends React.Component<LoginDialogProps, LoginDialogState> {
     );
   }
 }
+
 const mapStateToProps = (state: any) => {
   return {
     isOpen: state.login.isOpen,
@@ -119,6 +131,7 @@ const mapDispatchToProps = (dispatch: any) => {
   return {
     openDialog: () => dispatch(openLoginDialog()),
     closeDialog: () => dispatch(closeLoginDialog()),
+    logout: () => dispatch(handleLogout()),
     submitLogin: (userCredencials: UserCredencials) =>
       dispatch(handleLogin(userCredencials))
   };

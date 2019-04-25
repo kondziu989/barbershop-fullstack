@@ -13,10 +13,10 @@ const orders = async ({token} : {token: string}) => {
                                     .join("product","orderproduct.idp","product.idp")
                                     .where("idc",userData.userId);
             const orderIds = new Set();
-            orders.forEach(order => orderIds.add(order.ido))
+            orders.forEach((order: any) => orderIds.add(order.ido))
             const userOrders = new Map();
             [...orderIds].forEach(orderId => {
-                const orderData = orders.filter(order => order.ido === orderId);
+                const orderData = orders.filter((order: any) => order.ido === orderId);
                 userOrders.set(orderId, {
                 IdO: orderData[0].ido,
                 status: orderData[0].status,
@@ -27,7 +27,7 @@ const orders = async ({token} : {token: string}) => {
                 })
             }
             )
-            orders.forEach(order => {
+            orders.forEach((order: any) => {
                 userOrders.get(order.ido).orderProducts.push({
                     IdP: order.idp,
                     name: order.name,
@@ -39,7 +39,7 @@ const orders = async ({token} : {token: string}) => {
                 })
             })
             for(let order of userOrders.values()){
-                const totalPrice = order.orderProducts.reduce((prev, product) => {
+                const totalPrice = order.orderProducts.reduce((prev: any, product: any) => {
                     return prev + product.price * product.quantity
                 }, 0);
                 userOrders.get(order.IdO).totalPrice = totalPrice;
@@ -51,11 +51,11 @@ const orders = async ({token} : {token: string}) => {
     }
 }
 
-const makeOrder = async ({token, order}) => {
+const makeOrder = async ({token, order} : any)  => {
     if(token.length > 0){
         const userData = jwt.verify(token, "supersecretkey");
         try {
-            const status = await db.transaction(async trx => {
+            const status = await db.transaction(async (trx: any) => {
                 try {
                     const newOrder : CustomerOrder = {
                         comment: order.comment,
@@ -66,7 +66,7 @@ const makeOrder = async ({token, order}) => {
                     const createdOrderId = await trx("customerorders")
                                                 .insert(newOrder)
                                                 .returning("ido");
-                    const orderedProducts = order.orderProducts.map((product) => {
+                    const orderedProducts = order.orderProducts.map((product: any) => {
                         return {
                             idp: product.IdP,
                             ido: createdOrderId[0],

@@ -10,7 +10,7 @@ interface UserData {
   phone: String;
 }
 //TODO add input validation
-const register = async ({ userInput }) => {
+const register = async ({ userInput } : {userInput: UserData}) => {
   const newUser: UserData = userInput;
   if(
     newUser.email!=="" 
@@ -31,7 +31,7 @@ const register = async ({ userInput }) => {
           password: hashedPassword,
           status: "user"
         };
-        const status = await db.transaction(async trx => {
+        const status = await db.transaction(async (trx : any) => {
           try {
             const createdUser = await trx("users")
               .insert(userData)
