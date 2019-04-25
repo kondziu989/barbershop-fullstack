@@ -5,6 +5,7 @@ import {registerReducer} from "./registerReducer";
 import {productsReducer} from "./productsReducer";
 import { barberReducer } from "./barberReducer";
 import { cartReducer } from "./cartReducer";
+import { ordersReducer } from "./ordersReducer";
 
 
 export default combineReducers({
@@ -14,4 +15,5 @@ export default combineReducers({
     products: productsReducer,
     barbers: barberReducer,
     cart: cartReducer,
+    orders: ordersReducer,
 })

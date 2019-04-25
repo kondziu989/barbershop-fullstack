@@ -17,6 +17,7 @@ import Shop from './components/pages/Shop'
 import Team from './components/pages/Team'
 import About from './components/pages/About'
 import Cart from './components/pages/Cart'
+import OrderHistory from './components/pages/OrderHistory'
 
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core'
 import { amber, grey } from '@material-ui/core/colors'
@@ -45,6 +46,7 @@ class App extends Component {
             <Route exact path='/shop'component = {Shop} />
             <Route exact path='/offer'component = {Offer} />
             <Route exact path='/cart' component = {Cart} />
+            <Route exact path='/orderhistory' component = {OrderHistory} />
           <Footer />
       </Router>
       </MuiThemeProvider>
