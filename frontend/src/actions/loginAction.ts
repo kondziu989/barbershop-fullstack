@@ -37,14 +37,22 @@ export const handleLogin = (credencials : UserCredencials) =>(dispatch: any) => 
     })
     .then(res => res.json())
     .then(data => {
-        dispatch({
-            type: HADLE_LOGIN_SUCCESS,
-            payload: data.data.login
-        })
-        dispatch({
-            type: CLOSE_LOGIN_DIALOG,
-            payload: false
-        })
+        if(data.data.login !== null){
+            dispatch({
+                type: HADLE_LOGIN_SUCCESS,
+                payload: data.data.login
+            })
+            dispatch({
+                type: CLOSE_LOGIN_DIALOG,
+                payload: false
+            })
+        } else {
+            dispatch({
+                type: HADLE_LOGIN_ERROR,
+                payload: false
+            })
+        }
+        
     })
     .catch((err : any) => {
         dispatch({

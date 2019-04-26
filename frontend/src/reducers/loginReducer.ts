@@ -28,7 +28,7 @@ export const loginReducer = (state = initialLoginState, action: any) => {
         return {
           ...state,
           isPending: false,
-          userData: action.payload
+          userData: (action.payload != null)? action.payload : {}
         };
       case HADLE_LOGIN_ERROR:
         return {

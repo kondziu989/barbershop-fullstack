@@ -92,7 +92,6 @@ const OrderHistory = withStyles(styles)(
             <TableBody>
               <TableRow>
                 <TableCell align='right'>Total</TableCell>
-                <TableCell align="center">{order.orderProducts.length}</TableCell>
                 <TableCell align="left" >{(Math.round(5 * 100) / 100).toFixed(order.totalPrice)} zł</TableCell>
           </TableRow>
             </TableBody>

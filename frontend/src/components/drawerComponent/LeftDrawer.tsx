@@ -9,7 +9,7 @@ import {
   Drawer,
   withStyles,
   WithStyles,
-  IconButton
+  IconButton,
 } from "@material-ui/core";
 import InboxIcon from "@material-ui/icons/MoveToInbox";
 import MailIcon from "@material-ui/icons/Mail";
@@ -17,6 +17,8 @@ import LoginIcon from "@material-ui/icons/Done";
 import LogoutIcon from "@material-ui/icons/Close";
 import RegisterIcon from "@material-ui/icons/AlternateEmail";
 import FaceIcon from "@material-ui/icons/Face";
+import OrderIcon from "@material-ui/icons/ShopTwo";
+
 
 import LoginDialog from "../loginComponent/LoginDialog";
 import MenuIcon from "@material-ui/icons/Menu";
@@ -25,6 +27,7 @@ import MenuIcon from "@material-ui/icons/Menu";
 import { connect } from "react-redux";
 import { openLoginDialog, handleLogout } from "../../actions/loginAction";
 import { openRegisterDialog } from "../../actions/registerAction";
+import { Link } from "react-router-dom";
 
 const styles = {
   list: {
@@ -44,6 +47,10 @@ interface DrawerProps extends WithStyles<typeof styles> {
   logout: Function;
   firstName: string;
 }
+
+const MyLink = (props: any) => <Link to="/orderhistory" {...props} />;
+
+
 
 class TemporaryDrawer extends React.Component<DrawerProps, {}> {
   state = {
@@ -68,6 +75,9 @@ class TemporaryDrawer extends React.Component<DrawerProps, {}> {
     this.props.logout();
   }
 
+  handleOrders = () => {
+  }
+
   render() {
     const { classes, firstName } = this.props;
 
@@ -84,6 +94,13 @@ class TemporaryDrawer extends React.Component<DrawerProps, {}> {
             <LogoutIcon />
           </ListItemIcon>
           <ListItemText primary="Wyloguj się" onClick={this.handleLogout}/>
+        </ListItem>
+        <Divider />
+        <ListItem component={MyLink} button key="orders">
+          <ListItemIcon>
+            <OrderIcon />
+          </ListItemIcon>
+          <ListItemText primary="Zamówienia"/>
         </ListItem>
         <Divider />
         <List>

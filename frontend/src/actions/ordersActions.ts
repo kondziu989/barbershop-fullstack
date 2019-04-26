@@ -43,7 +43,7 @@ const query = (token: string) => {
       .then(data =>
         dispatch({
           type: FETCH_ORDERS_SUCCESS,
-          payload: data.data.products
+          payload: data.data.orders
         })
       )
       .catch((err: any) =>
