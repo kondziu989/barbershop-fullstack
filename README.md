@@ -14,3 +14,4 @@ https://mohawkbarbershop.herokuapp.com/graphql
 - display shop services and offer
 - main page layout
 - order products
+- display user orders
