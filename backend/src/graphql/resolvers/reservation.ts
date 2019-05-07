@@ -100,8 +100,8 @@ const getAvaliableReservationsMonth = async (
     const fullyBookedDays = await Promise.all([...fullyBookedDaysPromises])
       .then(days => days.reduce((prev, curr) => prev.concat(curr), []))
       .catch(console.log);
-
-    const avaliableDays = getAvaliableDaysInMonth(fullyBookedDays, "05-2019");
+    
+    const avaliableDays = getAvaliableDaysInMonth(fullyBookedDays, date);
     if (avaliableDays) resolve(avaliableDays);
     else reject("error getting free days");
   });
@@ -111,28 +111,35 @@ const getAvaliableDaysInMonth = (
   fullyBookedDays: Array<number>,
   date: string
 ) => {
-  const daysInMonth = moment(date, "MM/YYYY").daysInMonth();
+  const daysInMonth = moment(date).daysInMonth();
   const avaliableDays = [];
   const today = new Date();
   for (let index = 1; index <= daysInMonth; index++) {
-    const day = moment(
-      `${index < 10 ? "0" + index : index}-${date}`,
-      "DD-MM-YYYY"
-    );
-    if (!fullyBookedDays.includes(index) && today < day) {
-      avaliableDays.push(day.toString());
+    const day = moment(date).date(index)
+    if (!fullyBookedDays.includes(index) && today <= day) {
+        
+      avaliableDays.push(day.format("YYYY-MM-DD"));
     }
   }
   return avaliableDays;
 };
 
-export const freeReservationsMonth = async () => {
-  const avaliableDays = await getAvaliableReservationsMonth(
-    "04-05-2019",
-    30,
-    1
-  );
-  return avaliableDays;
+export const freeReservationsMonth = async ({barberId, serviceId, date}) => {
+    try{
+        let duration = await db
+        .select("duration")
+        .from("services")
+        .where("ids", serviceId)
+        duration = duration[0].duration
+        const avaliableDays = await getAvaliableReservationsMonth(
+          date,
+          duration,
+          barberId
+        );
+        return avaliableDays;
+    }catch(error){
+        return error
+    }
 };
 
 const allWorkingHoursInDay = (date: any) : Promise<Array<any>> => {
@@ -180,7 +187,7 @@ const allTakenHoursInDay = (reservations: any) => {
 }
 
 export const freeReservationsDay = async ({barberId,serviceId, date} : any) => {
-  const reservationDate = moment("2019-05-06")
+  //const reservationDate = moment("2019-05-06")
   const day = parseInt(moment(date).format("D"));
   let duration = await db
     .select("duration")
@@ -193,7 +200,7 @@ export const freeReservationsDay = async ({barberId,serviceId, date} : any) => {
     .innerJoin("services", "services.ids", "reservation.ids")
     .where("idb", barberId)
     .andWhere(db.raw("extract(day from reservationDate) = ?", [day]));
-  const allWorkingHours = allWorkingHoursInDay("2019-05-06");
+  const allWorkingHours = allWorkingHoursInDay(date);
   const allTakenHours = reservations.then((reservations: any) =>
     allTakenHoursInDay(reservations)
   );
@@ -224,7 +231,20 @@ export const makeReservation = async ({
   reservationData: ReservationData;
 }) => {
   if (token.length > 0) {
-    const userData = jwt.verify(token, "supersecretkey");
-    return true;
+    const userData = jwt.verify(token, "supersecretkey")
+    try {
+        const reservation = {
+            reservationdate: reservationData.date,
+            idc: userData.userId,
+            idb: reservationData.IdB,
+            ids: reservationData.IdS,
+            comment: reservationData.comment,
+            status: "pending"
+        }
+        const createdReservation = await db("reservation").insert(reservation).returning("*")
+        return true
+    } catch(error) {
+        console.log(error)
+    }
   }
 };
