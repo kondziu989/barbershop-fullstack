@@ -124,7 +124,7 @@ const getAvaliableDaysInMonth = (
   return avaliableDays;
 };
 
-export const freeReservationsMonth = async ({barberId, serviceId, date}) => {
+export const freeReservationsMonth = async ({barberId, serviceId, date} : any) => {
     try{
         let duration = await db
         .select("duration")
@@ -162,7 +162,7 @@ const allWorkingHoursInDay = (date: any) : Promise<Array<any>> => {
 
 const allTakenHoursInDay = (reservations: any) => {
     return new Promise((resolve, reject) => {
-        const takenHours = reservations.map(reservation => {
+        const takenHours = reservations.map((reservation: any) => {
             const {reservationdate, duration} = reservation
             const reservationHours = []
             const reservationStart = moment(reservationdate)
