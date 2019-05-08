@@ -52,6 +52,14 @@ type Order {
     totalPrice: Float
 }
 
+type Reservation {
+    IdR: Int
+    barberName: String
+    service: String
+    date: String
+    status: String
+}
+
 input UserInput {
     email: String!
     password: String!
@@ -70,17 +78,28 @@ input OrderInput {
     comment: String
 }
 
+input ReservationData {
+    date: String
+    IdB: Int
+    IdS: Int
+    comment: String
+}
+
 type RootQuery {
     barbers: [Barber!]!
     products: [Product!]!
     services: [Service!]!
     login(email: String!, password: String!) : AuthData
     orders(token: String!) : [Order]
+    reservations(token: String!): [Reservation]
+    freeReservationsMonth(barberId: Int,serviceId: Int, date: String): [String]
+    freeReservationsDay(barberId: Int,serviceId: Int, date: String): [String]
 }
 
 type RootMutation {
     register(userInput: UserInput!) : Boolean!
     makeOrder(token: String!, order: OrderInput!): Boolean!
+    makeReservation(token: String!, reservationData: ReservationData!): Boolean
 }
 
 schema {

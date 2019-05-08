@@ -50,7 +50,7 @@ export const handleMakeOrder = (token: string, orderedProducts: Array<CartItem>)
   dispatch: any
 ) => {
   dispatch({ type: HANDLE_ORDER_MAKE_PENDING });
-  console.log(query(token, orderedProducts));
+  console.log(query(token, orderedProducts))
   fetch("https://mohawkbarbershop.herokuapp.com/graphql", {
     method: "POST",
     headers: {

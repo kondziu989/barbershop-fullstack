@@ -6,7 +6,8 @@ import {
   DialogContent,
   DialogContentText,
   TextField,
-  DialogActions
+  DialogActions,
+  Typography
 } from "@material-ui/core";
 import {
   handleLogin,
@@ -30,6 +31,7 @@ interface LoginDialogProps {
   logout: Function;
   userData: UserData;
   isOpen: boolean;
+  err: any;
 }
 
 interface LoginDialogState {
@@ -70,7 +72,7 @@ class LoginDialog extends React.Component<LoginDialogProps, LoginDialogState> {
     this.props.logout();
   }
   render() {
-    const {userData} = this.props;
+    const {userData, err} = this.props;
     return (
       (userData.token)
       ?
@@ -105,6 +107,7 @@ class LoginDialog extends React.Component<LoginDialogProps, LoginDialogState> {
               fullWidth
               onChange={this.handlePasswordChange}
             />
+            <Typography color="error" variant="subtitle1">{(err === false)?"Błędny login lub hasło": ""}</Typography>
           </DialogContent>
           <DialogActions>
             <Button onClick={this.handleClose} color="primary">
@@ -123,7 +126,8 @@ class LoginDialog extends React.Component<LoginDialogProps, LoginDialogState> {
 const mapStateToProps = (state: any) => {
   return {
     isOpen: state.login.isOpen,
-    userData: state.login.userData
+    userData: state.login.userData,
+    err: state.login.error
   };
 };
 

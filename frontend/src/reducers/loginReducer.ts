@@ -17,7 +17,8 @@ export const loginReducer = (state = initialLoginState, action: any) => {
       case CLOSE_LOGIN_DIALOG:
         return{
           ...state,
-          isOpen: action.payload
+          isOpen: action.payload,
+          error: ""
         };
       case HADLE_LOGIN_PENDING:
         return {
