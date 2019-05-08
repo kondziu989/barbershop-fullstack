@@ -69,20 +69,22 @@ const OrderHistory = withStyles(styles)(
             <TableCell>{order.orderDate}</TableCell>
             <TableCell>{order.status}</TableCell>
             <TableCell>{order.comment}</TableCell>
+            <TableCell>{order.totalPrice + " zł"}</TableCell>
           </TableRow>
-          <Collapse in = {this.state.collapse===i}>
-          {order.orderProducts.map(item => {
+            <TableCell colSpan={3}>
+          <Collapse in = {this.state.collapse===i} >
+          
             <Table>
             <TableHead>
               <TableRow>
-                <TableCell>
-                  {item.name}
+                <TableCell colSpan={2} align="right">
+                  Nazwa
                 </TableCell>
-                <TableCell align='center'>
-                  {item.quantity}
+                <TableCell align='left'>
+                  Ilość
                 </TableCell>
                 <TableCell>
-                  {item.price}
+                  Cena
                 </TableCell>
                 <TableCell>
 
@@ -90,13 +92,25 @@ const OrderHistory = withStyles(styles)(
               </TableRow>
             </TableHead>
             <TableBody>
-              <TableRow>
-                <TableCell align='right'>Total</TableCell>
-                <TableCell align="left" >{(Math.round(5 * 100) / 100).toFixed(order.totalPrice)} zł</TableCell>
-          </TableRow>
+              {order.orderProducts.map(item => {
+                return (
+                  <TableRow>
+                    <TableCell colSpan={2} align="right">
+                      {item.name}
+                    </TableCell>
+                    <TableCell>
+                      {item.quantity}
+                    </TableCell>
+                    <TableCell>
+                      {item.price + " zł"}
+                    </TableCell>
+                  </TableRow>
+                  )
+              })}
             </TableBody>
-          </Table>})}
+          </Table>
           </Collapse>
+          </TableCell>
           </>)}
       )
     }
@@ -116,6 +130,7 @@ const OrderHistory = withStyles(styles)(
                         <TableCell>Data złożenia zamówienia</TableCell>
                         <TableCell>Status</TableCell>
                         <TableCell>Komentarz</TableCell>
+                        <TableCell>Razem</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody >

@@ -6,6 +6,7 @@ import {
   HANDLE_ORDER_MAKE_SUCCESS,
   HANDLE_ORDER_MAKE_ERROR
 } from "./types";
+import { CartItem } from "../reducers/cartReducer";
 
 export const addToCart = (id: number, price: number) => ({
   type: ADD_TO_CART,
@@ -23,24 +24,33 @@ export const removeItemFromCart = (id: number) => ({
 });
 
 const query = (token: string, orderedProducts: Array<any>) => {
-  const products = orderedProducts.map(product => JSON.stringify(product));
+  console.log(orderedProducts);
+  const products = orderedProducts.map(product =>{return{
+      IdP: product.id,
+      quantity: product.quantity
+  }});
+
+  const order ={
+    orderProducts: [],
+    comment:""
+  }
+
   return JSON.stringify({
     query: `mutation {
                   makeOrder(
                         token: "${token}",
-                        order: {
-                                orderProducts: ${products}
-                        }
+                        order: ${JSON.stringify(order)}
                   )
                 }
                 `
   });
 };
 
-export const handleMakeOrder = (token: string, orderedProducts: Array<any>) => (
+export const handleMakeOrder = (token: string, orderedProducts: Array<CartItem>) => (
   dispatch: any
 ) => {
   dispatch({ type: HANDLE_ORDER_MAKE_PENDING });
+  console.log(query(token, orderedProducts));
   fetch("https://mohawkbarbershop.herokuapp.com/graphql", {
     method: "POST",
     headers: {

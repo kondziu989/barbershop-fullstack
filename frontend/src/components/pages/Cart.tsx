@@ -26,7 +26,8 @@ import { Link } from "react-router-dom";
 import {
   addToCart,
   removeFromCart,
-  removeItemFromCart
+  removeItemFromCart,
+  handleMakeOrder
 } from "../../actions/cartActions";
 import { fetchProducts } from "../../actions/productsAction";
 import { CartItem, cartReducer } from "../../reducers/cartReducer";
@@ -90,6 +91,8 @@ interface CartProps extends WithStyles<typeof styles> {
   total: number;
   addedProducts: Array<AddedProduct>;
   removeItemFromCart: Function;
+  handleMakeOrder: Function;
+  token: string;
 }
 
 const Cart = class extends Component<CartProps, {}> {
@@ -114,6 +117,10 @@ const Cart = class extends Component<CartProps, {}> {
   handleItemRemove = (id: number) => {
     this.props.removeItemFromCart(id);
   };
+
+  handleOrder = (token: string, orderedProducts: Array<CartItem>) => {
+    this.props.handleMakeOrder(token, orderedProducts)
+  }
 
   display = () => {
     return this.props.cart.length === 0
@@ -198,6 +205,7 @@ const Cart = class extends Component<CartProps, {}> {
           </TableBody>
         </Table>
         <Button
+          onClick={() => this.handleOrder(this.props.token, this.props.cart)}
           color="primary"
           variant="outlined"
           style={{ marginTop: "20px" }}
@@ -233,7 +241,8 @@ const mapStateToProps = (state: any) => {
   return {
     products: state.products.products,
     cart: state.cart.cart,
-    total: state.cart.total
+    total: state.cart.total,
+    token: state.login.userData.token
   };
 };
 
@@ -242,7 +251,8 @@ const mapDispatchToProps = (dispatch: any) => {
     fetchProducts: () => dispatch(fetchProducts()),
     addToCart: (id: number, price: number) => dispatch(addToCart(id, price)),
     removeFromCart: (id: number) => dispatch(removeFromCart(id)),
-    removeItemFromCart: (id: number) => dispatch(removeItemFromCart(id))
+    removeItemFromCart: (id: number) => dispatch(removeItemFromCart(id)),
+    handleMakeOrder: (token: string, orderedProducts: Array<CartItem>) => dispatch(handleMakeOrder(token, orderedProducts))
   };
 };
 export default connect(
