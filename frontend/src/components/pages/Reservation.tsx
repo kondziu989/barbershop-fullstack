@@ -178,6 +178,10 @@ const Reservation = withStyles(styles)(
     }
 
     handleChange = (event:any) => {
+       if(event.target.name==='barber')
+       this.props.fetchFreeDay(event.target.value, this.state.service, this.dateToString(this.state.date))
+       if(event.target.name==='service')
+       this.props.fetchFreeDay(this.state.barber, event.target.value, this.dateToString(this.state.date))
         this.setState({[event.target.name]: event.target.value});
       };
 
