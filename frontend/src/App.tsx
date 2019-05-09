@@ -18,10 +18,14 @@ import Team from './components/pages/Team'
 import About from './components/pages/About'
 import Cart from './components/pages/Cart'
 import OrderHistory from './components/pages/OrderHistory'
+import Reservation from './components/pages/Reservation'
 
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core'
-import { amber, grey } from '@material-ui/core/colors'
 
+import { amber, grey } from '@material-ui/core/colors'
+import { MuiPickersUtilsProvider } from '@material-ui/pickers'
+import DateFnsUtils from '@date-io/date-fns';
+import MomentUtils from '@date-io/moment';
 
 let theme = createMuiTheme({
   palette:{
@@ -37,7 +41,6 @@ import './Assets/css/main.css'
 class App extends Component {
   render() {
     return (
-      
       <MuiThemeProvider theme = {theme}>
       <Router>
           <Header />
@@ -47,6 +50,7 @@ class App extends Component {
             <Route exact path='/offer'component = {Offer} />
             <Route exact path='/cart' component = {Cart} />
             <Route exact path='/orderhistory' component = {OrderHistory} />
+            <Route exact path='/reservation' component = {Reservation} />
           <Footer />
       </Router>
       </MuiThemeProvider>

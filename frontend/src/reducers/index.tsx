@@ -6,6 +6,7 @@ import {productsReducer} from "./productsReducer";
 import { barberReducer } from "./barberReducer";
 import { cartReducer } from "./cartReducer";
 import { ordersReducer } from "./ordersReducer";
+import { freeMonthReducer, freeDayReducer, reservationReducer } from "./reservationsReducer"
 
 
 export default combineReducers({
@@ -16,4 +17,8 @@ export default combineReducers({
     barbers: barberReducer,
     cart: cartReducer,
     orders: ordersReducer,
+    freeReservationsDay: freeDayReducer,
+    freeReservationsMonth: freeMonthReducer,
+    reservation: reservationReducer,
+   // service: reservationReducer,
 })

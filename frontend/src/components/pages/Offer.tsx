@@ -17,13 +17,16 @@ import {
   TableBody,
   TableCell,
   Button,
-  CircularProgress
+  CircularProgress,
 } from "@material-ui/core";
 import { throws } from "assert";
 
 //redux
 import { connect } from "react-redux";
 import { fetchServices } from "../../actions/servicesAction";
+import { Redirect } from "react-router";
+import { Link } from "react-router-dom";
+import { setReservationService, setReservationBarber } from "../../actions/reservationActions";
 //components
 const styles = (theme: Theme) =>
   createStyles({
@@ -33,27 +36,20 @@ const styles = (theme: Theme) =>
   });
 
 interface Service {
-  idS: number;
+  ids: number;
   name: string;
   price: number;
   duration: number;
 }
-var query = `
-{
-services
-  {
-  	ids,
-    name,
-    price,
-    duration
-  }
-}
-`;
+
 interface OfferProps extends WithStyles<typeof styles> {
   fetchServices: any;
   services: Array<Service>;
   err: String;
   pending: Boolean;
+  history: any;
+  setReservationService: Function;
+  setReservationBarber: Function;
 }
 const Offer = withStyles(styles)(
   class extends Component<OfferProps, {}> {
@@ -61,6 +57,11 @@ const Offer = withStyles(styles)(
       this.props.fetchServices();
     }
 
+    handleReservationClick = (service: number) => {
+      console.log(service)
+      this.props.setReservationService(service)
+      this.props.history.push('/reservation');
+    };
     displayOffer = () => {
       const { pending, services } = this.props;
       if (pending) {
@@ -73,7 +74,7 @@ const Offer = withStyles(styles)(
               <TableCell>{service.duration}</TableCell>
               <TableCell>{service.price}</TableCell>
               <TableCell>
-                <Button variant="outlined" color="primary" size="small">
+                <Button variant="outlined" color="primary" size="small" value={service.ids} onClick={() => this.handleReservationClick(service.ids)}>
                   Rezerwuj
                 </Button>
               </TableCell>
@@ -119,7 +120,8 @@ const mapStateToProps = (state: any) => {
 
 const mapDispatchToProps = (dispatch: any) => {
   return {
-    fetchServices: () => dispatch(fetchServices())
+    fetchServices: () => dispatch(fetchServices()),
+    setReservationService: (serviceId:number) => dispatch(setReservationService(serviceId)),
   };
 };
 export default connect(

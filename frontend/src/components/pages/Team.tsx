@@ -8,6 +8,7 @@ import { Dispatch } from "redux";
 import { Grid, CircularProgress, Button, Theme, createStyles, WithStyles, withStyles } from "@material-ui/core";
 //components
 import barberImg from "../../photos/team_member.jpg";
+import { setReservationBarber } from "../../actions/reservationActions";
 
 const styles = (theme: Theme) => createStyles({
   barberCard: {
@@ -39,6 +40,8 @@ interface TeamProps extends WithStyles<typeof styles>{
   err: string;
   pending: boolean;
   fetchBarbers: Function;
+  setReservationBarber: Function;
+  history: any;
 }
 
 interface TeamState {}
@@ -47,6 +50,12 @@ class Team extends Component<TeamProps, TeamState> {
   componentDidMount() {
     this.props.fetchBarbers();
   }
+
+  handleReservationClick = (barber: number) => {
+    this.props.setReservationBarber(barber)
+    this.props.history.push('/reservation');
+  };
+
   displayBarbers = () => {
     const { barbers, pending, err, classes} = this.props;
 
@@ -59,7 +68,7 @@ class Team extends Component<TeamProps, TeamState> {
             <img src={barberImg} width="250px"/>
             <p className={classes.nameText}>{barber.name}</p>
             <p className={classes.rankText}>{barber.IdB < 3 ? "Golibroda" : "MasterBarber"}</p>
-            <Button color="primary" variant="outlined">Rezerwuj</Button>
+            <Button color="primary" variant="outlined" onClick = {() => this.handleReservationClick(barber.IdB)}>Rezerwuj</Button>
           </Grid>
         );
       });
@@ -89,7 +98,8 @@ const mapStateToProps = (state: any) => {
 
 const mapDispatchToProps = (dispatch: any) => {
   return {
-    fetchBarbers: () => dispatch(fetchBarbers())
+    fetchBarbers: () => dispatch(fetchBarbers()),
+    setReservationBarber: (barberId: number) => dispatch(setReservationBarber(barberId))
   };
 };
 
