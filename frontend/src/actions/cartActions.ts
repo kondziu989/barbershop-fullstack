@@ -31,18 +31,19 @@ const query = (token: string, orderedProducts: Array<any>) => {
   }});
 
   const order ={
-    orderProducts: [],
+    orderProducts: products,
     comment:""
   }
 
   return JSON.stringify({
-    query: `mutation {
+    query: `mutation makeOrderRequest($token: String!, $order: OrderInput!){
                   makeOrder(
-                        token: "${token}",
-                        order: ${JSON.stringify(order)}
+                        token: $token,
+                        order: $order
                   )
                 }
-                `
+                `,
+    variables: {token, order}
   });
 };
 
