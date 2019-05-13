@@ -53,11 +53,14 @@ type Order {
 }
 
 type Reservation {
-    IdR: Int
-    barberName: String
+    idr: Int
+    barbername: String
     service: String
     date: String
     status: String
+    price: Float
+    comment: String
+    duration: Int
 }
 
 input UserInput {
@@ -91,7 +94,7 @@ type RootQuery {
     services: [Service!]!
     login(email: String!, password: String!) : AuthData
     orders(token: String!) : [Order]
-    reservations(token: String!): [Reservation]
+    getCurrentReservations(token: String!): [Reservation]
     freeReservationsMonth(barberId: Int,serviceId: Int, date: String): [String]
     freeReservationsDay(barberId: Int,serviceId: Int, date: String): [String]
 }
