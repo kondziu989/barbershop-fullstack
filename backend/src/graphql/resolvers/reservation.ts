@@ -1,6 +1,5 @@
 import db from "../../db";
 import jwt from "../../dependencies";
-import { resolve, reject, any } from "bluebird";
 const moment = require("moment");
 
 interface ReservationData {
@@ -248,3 +247,37 @@ export const makeReservation = async ({
     }
   }
 };
+
+interface Reservation {
+  idr: number
+  barbername: string
+  service: string
+  date: string
+  status: string
+  price: number
+  comment: string
+  duration: number
+}
+
+export const getCurrentReservations = async ({token} : {token : String}) => {
+  if(token.length > 0){
+    const userData = jwt.verify(token, "supersecretkey")
+    try {
+      let userCurrentReservations : Array<Reservation> = await db.select(db.raw("idr as IdR, services.name as service, barbers.name as barberName,price,duration,status,reservationdate as date"))
+      .from("reservation")
+      .innerJoin("services", "services.ids", "reservation.ids")
+      .innerJoin("barbers", "barbers.idb", "reservation.idb")
+      .where("status", "pending")
+      .andWhere("idc",userData.userId)
+      userCurrentReservations = userCurrentReservations.map(reservation => {
+        return {
+          ...reservation,
+          date: moment(reservation.date).format("YYYY-MM-DD HH:MM")
+        }
+      })
+      return userCurrentReservations
+    } catch (error) {
+      console.log(error)
+    }
+  }
+}
