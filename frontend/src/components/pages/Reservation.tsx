@@ -205,7 +205,7 @@ const Reservation = withStyles(styles)(
 
     populateTime = () =>{
         const {classes} = this.props
-        return typeof this.props.freeReservationsDay==='undefined'||this.props.freeReservationsDay.length===0?
+        return typeof this.props.freeReservationsDay==='undefined'||this.props.freeReservationsDay===null||this.props.freeReservationsDay.length===0?
         <Typography variant='h5'>Brak dostępnych terminów w tym dniu.</Typography>
         :this.props.freeReservationsDay.map(time => {
         return (

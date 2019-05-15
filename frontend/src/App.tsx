@@ -3,7 +3,8 @@ import './App.css';
 import{
   BrowserRouter as Router,
   Route,
-  Link
+  Link,
+  Redirect
 } from 'react-router-dom'
 
 
@@ -19,6 +20,9 @@ import About from './components/pages/About'
 import Cart from './components/pages/Cart'
 import OrderHistory from './components/pages/OrderHistory'
 import Reservation from './components/pages/Reservation'
+import Auth from './components/pages/Auth'
+import Reservations from './components/pages/Reservations'
+
 
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core'
 
@@ -32,25 +36,58 @@ let theme = createMuiTheme({
     primary: amber,
     secondary: grey,
     type: 'dark'
-  }
+  },
+
+  typography: {
+    useNextVariants: true,
+  },
 })
 console.log(theme)
 
+interface AppProps{
+  token: string,
+}
 //assets
 import './Assets/css/main.css'
-class App extends Component {
+import { connect } from 'react-redux';
+import { openRegisterDialog, closeRegisterDialog } from './actions/registerAction';
+import { openLoginDialog } from './actions/loginAction';
+class App extends Component<AppProps> {
+
+  PrivateRoute = ({ component: Component, ...rest }:any) => {
+    
+    return (
+      <Route
+        {...rest}
+        render={props =>
+          typeof this.props.token==='undefined'||this.props.token.length<=0 ?(
+            // <Redirect
+            //   to={{
+            //     pathname: "/",
+            //     state: { from: props.location }
+            //   }}
+            // />
+            <Auth />
+          ):(
+            <Component {...props} />
+          )
+        }
+      />
+    );
+  }
   render() {
     return (
       <MuiThemeProvider theme = {theme}>
       <Router>
           <Header />
-            <Route exact path='/'component = {About} />
-            <Route exact path='/team'component = {Team} />
-            <Route exact path='/shop'component = {Shop} />
-            <Route exact path='/offer'component = {Offer} />
-            <Route exact path='/cart' component = {Cart} />
-            <Route exact path='/orderhistory' component = {OrderHistory} />
-            <Route exact path='/reservation' component = {Reservation} />
+            <Route exact path='/'component = {About}/>
+              <Route exact path='/team'component = {Team} />
+              <Route exact path='/shop'component = {Shop} />
+              <Route exact path='/offer'component = {Offer} />
+              <this.PrivateRoute exact path='/orderhistory' component = {OrderHistory} />
+              <this.PrivateRoute exact path='/reservation' component = {Reservation} />
+              <this.PrivateRoute exact path='/cart' component = {Cart} />
+              <this.PrivateRoute exact path='/reservations' component = {Reservations} />
           <Footer />
       </Router>
       </MuiThemeProvider>
@@ -58,4 +95,10 @@ class App extends Component {
   }
 }
 
-export default App;
+const mapStateToProps = (state: any) => {
+  return {
+    token: state.login.userData.token,
+  };
+};
+
+export default connect(mapStateToProps)(App);

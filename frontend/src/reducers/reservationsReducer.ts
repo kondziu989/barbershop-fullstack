@@ -6,7 +6,10 @@ import {
     FETCH_FREE_MONTH_PENDING,
     FETCH_FREE_MONTH_SUCCESS,
     SET_RESERVATION_BARBER,
-    SET_RESERVATION_SERVICE
+    SET_RESERVATION_SERVICE,
+    GET_CURRENT_RESERVATIONS_ERROR,
+    GET_CURRENT_RESERVATIONS_PENDING,
+    GET_CURRENT_RESERVATIONS_SUCCESS
 } from "../actions/types";
   
   const initialStateMonth = {
@@ -93,3 +96,34 @@ export const freeDayReducer = (state = initialStateDay, action: any) => {
         return state;
     }
 }
+
+const initialStateCurrentReservations = {
+  isPending: false,
+  currentReservations: [],
+  error: ""
+};
+
+export const currentReservationsReducer = (state = initialStateCurrentReservations, action: any) => {
+  switch (action.type) {
+      case GET_CURRENT_RESERVATIONS_PENDING:
+      return {
+          ...state,
+          isPending: true
+      };
+      case GET_CURRENT_RESERVATIONS_SUCCESS:
+      return {
+          ...state,
+          isPending: false,
+          currentReservations: action.payload
+      };
+      case GET_CURRENT_RESERVATIONS_ERROR:
+      return {
+          ...state,
+          isPending: false,
+          error: action.payload
+      };
+      default:
+      return state;
+  }
+}
+

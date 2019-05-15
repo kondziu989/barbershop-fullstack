@@ -48,7 +48,8 @@ interface DrawerProps extends WithStyles<typeof styles> {
   firstName: string;
 }
 
-const MyLink = (props: any) => <Link to="/orderhistory" {...props} />;
+const MyLinkToOrderHistory = (props: any) => <Link to="/orderhistory" {...props} />;
+const MyLinkToCurrentReservations = (props: any) => <Link to="/reservations" {...props} />;
 
 
 
@@ -96,11 +97,17 @@ class TemporaryDrawer extends React.Component<DrawerProps, {}> {
           <ListItemText primary="Wyloguj się" onClick={this.handleLogout}/>
         </ListItem>
         <Divider />
-        <ListItem component={MyLink} button key="orders">
+        <ListItem component={MyLinkToOrderHistory} button key="orders">
           <ListItemIcon>
             <OrderIcon />
           </ListItemIcon>
           <ListItemText primary="Zamówienia"/>
+        </ListItem>
+        <ListItem component={MyLinkToCurrentReservations} button key="orders">
+          <ListItemIcon>
+            <OrderIcon />
+          </ListItemIcon>
+          <ListItemText primary="Nadchodzące rezerwacje"/>
         </ListItem>
         <Divider />
         <List>
