@@ -7,7 +7,7 @@
     "start": "node dist/index.js",
     "watch": "nodemon dist/index.js",
     "watch-ts": "tsc -w",
-    "build": "tsc",
+    "build": "tsc && copyfiles ./build/**/* ./dist",
     "test": "echo \"Error: no test specified\" && exit 1",
     "postinstall": "npm run build"
   },
@@ -16,6 +16,8 @@
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.3",
+    "compression": "^1.7.4",
+    "copyfiles": "^2.1.0",
     "cors": "^2.8.5",
     "express": "^4.16.4",
     "express-graphql": "^0.7.1",

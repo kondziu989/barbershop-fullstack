@@ -206,7 +206,6 @@ export const freeReservationsDay = async ({barberId,serviceId, date} : any) => {
   try {
     const {finish} = getStartAndFinishHour(parseInt(moment(date).format("E")));
     const finishHour = moment(date).hour(finish);
-    console.log(finishHour)
     const result = await Promise.all([allWorkingHours, allTakenHours]);
     const freeHours = result[0]
       .filter(
