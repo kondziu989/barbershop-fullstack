@@ -14,14 +14,19 @@ import {
   Typography,
   WithStyles,
   withStyles,
-  Button
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
 } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import ClearIcon from "@material-ui/icons/Clear";
 import RemoveIcon from "@material-ui/icons/Remove";
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 
 import {
   addToCart,
@@ -93,9 +98,17 @@ interface CartProps extends WithStyles<typeof styles> {
   removeItemFromCart: Function;
   handleMakeOrder: Function;
   token: string;
+  isPending: boolean;
+  success: boolean;
+  err: any;
 }
 
 const Cart = class extends Component<CartProps, {}> {
+  state={
+    toOrderHistory: false,
+    toHomePage: false
+  }
+
   cartItemsQuantity = () => {
     var qtt = 0;
     this.props.cart.forEach(item => (qtt += item.quantity));
@@ -174,9 +187,22 @@ const Cart = class extends Component<CartProps, {}> {
       );
     });
   };
+  goHome = () =>{
+    this.setState({toHomePage: true})
+  }
+  
+  goToOrderHistory = () => {
+    this.setState({toOrderHistory: true})
+  }
 
   displayCart = () => {
     const { classes } = this.props;
+    if(this.state.toHomePage){
+      return <Redirect to = "/"/>
+    }
+    if(this.state.toOrderHistory){
+      return <Redirect to = "/orderhistory"/>
+    }
     return (
       <>
         <Table className="primary-font">
@@ -231,7 +257,26 @@ const Cart = class extends Component<CartProps, {}> {
           spacing={16}
         >
           {this.display()}
-        </Grid>
+          <Dialog
+      open={this.props.success}
+      onClose={() => this.goHome()}
+    >
+      <DialogTitle>Potwierdzenie Zamówienia</DialogTitle>
+      <DialogContent>
+        <DialogContentText>
+          Dziękujemy za dokonanie zamówienia w naszym salonie!
+          Historie zamówień możesz obejrzeć w panelu klienta.
+        </DialogContentText>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={() => this.goToOrderHistory()} color="primary">
+          Przejdz do zamówień
+        </Button>
+        <Button onClick={() => this.goHome()} color="primary">
+          Strona głowna
+        </Button>
+      </DialogActions>
+    </Dialog>        </Grid>
       </Grid>
     );
   }
@@ -242,7 +287,10 @@ const mapStateToProps = (state: any) => {
     products: state.products.products,
     cart: state.cart.cart,
     total: state.cart.total,
-    token: state.login.userData.token
+    token: state.login.userData.token,
+    isPending: state.cart.isPending,
+    success: state.cart.success,
+    err: state.cart.error
   };
 };
 

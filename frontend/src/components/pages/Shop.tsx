@@ -99,9 +99,7 @@ const Shop = class extends Component<ShopProps, {}>{
     this.props.cart.forEach((item) => qtt+= item.quantity)
     return qtt
   }
-
   
-
   //***********************RENDER********************************//
   render() {
     const { classes } = this.props
@@ -138,7 +136,7 @@ const mapStateToProps = (state:any) => {
   return{
     products: state.products.products,
     err: state.products.err,
-    pending: state.products.pending,
+    pending: state.products.isPending,
     cart: state.cart.cart,
     total: state.cart.total
   }

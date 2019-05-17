@@ -39,7 +39,7 @@ const ReservationCard = withStyles(styles)(
         <Grid container xs={12} justify="center" className={classes.card}>
             <Grid container item xs={12} justify='center'>
                 <Grid item>
-                <Typography align='center' inline>Rezerwacja nr:  </Typography>
+                <Typography align='center' inline>Rezerwacja nr  </Typography>
                 <Typography variant='h6' color='primary' inline>{reservation.idr}</Typography>
                 </Grid>
             </Grid>

@@ -17,11 +17,10 @@ import {
 import {DateFormatInput, TimeFormatInput} from 'material-ui-next-pickers'
 
 
-import { Grid, FormControl, InputLabel, Select, MenuItem, Typography, TextField, Chip, Button } from "@material-ui/core";
+import { Grid, FormControl, InputLabel, Select, MenuItem, Typography, TextField, Chip, Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from "@material-ui/core";
 
 //redux
 import { connect } from "react-redux";
-import classes from "*.module.css";
 import { fetchBarbers } from '../../actions/barberActions';
 import { fetchServices } from '../../actions/servicesAction';
 import { fetchFreeDay, fetchFreeMonth, setReservationService, setReservationBarber } from "../../actions/reservationActions";
@@ -126,6 +125,8 @@ const Reservation = withStyles(styles)(
         status: Status.none,
         response: "",
         toHomePage: false,
+        toReservations: false,
+        openDialog: false,
     }
   
     componentDidMount() {
@@ -133,6 +134,11 @@ const Reservation = withStyles(styles)(
         this.props.fetchServices();
         this.props.fetchFreeDay(this.state.barber, this.state.service, this.dateToString(this.state.date));
         this.setState({barber:this.props.barber, service:this.props.service})
+    }
+
+    openDialog = () => {
+      console.log('opening dialog')
+      this.setState({openDialog: true})
     }
 
     fetchMakeReservation = () => {
@@ -159,12 +165,8 @@ const Reservation = withStyles(styles)(
             this.setState({
               response: data.data.makeReservation,
               status: Status.accepted,
-              toHomePage: true
             });
-            data.data.makeReservation===true?window.alert("Udało się dokonać rezerwacji."):()=>{
-                window.alert("Rezerwacja nieudana - sprawdź czy wypełniłeś wszystkie pola")
-            }
-            
+            if(data.data.makeReservation) this.openDialog();
           })
           .catch(data => this.setState({ status: Status.rejected }));
       };
@@ -247,14 +249,25 @@ const Reservation = withStyles(styles)(
     handleMakeReservation = () =>{
         this.fetchMakeReservation();
     }
-     
+
+    goHome = () =>{
+      this.setState({toHomePage: true})
+    }
+    
+    goToReservations = () => {
+      this.setState({toReservations: true})
+    }
+   
 
     render() {
     if(this.state.toHomePage){
         return <Redirect to = "/"/>
     }
+    if(this.state.toReservations){
+      return <Redirect to = "/reservations"/>
+    }
     const { classes } = this.props
-      return typeof this.props.token !== 'undefined'?(
+      return (
         <Grid container justify="center">
           <Grid container className="content" justify="center" item xs={9}>
             <Grid item xs={12} justify="center">
@@ -316,14 +329,29 @@ const Reservation = withStyles(styles)(
             <Button size="large" fullWidth variant="outlined" color="primary" onClick={() => this.handleMakeReservation()}>Zatwierdź rezerwację</Button>
             </form>
             </Grid>
+            <Dialog
+          open={this.state.openDialog}
+          onClose={() => this.goHome()}
+        >
+          <DialogTitle>Potwierdzenie rezerwacji</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              Dziękujemy za dokonanie rezerwacji w naszym salonie!
+              Swoje aktualne rezerwacje możesz obejrzeć w panelu klienta.
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => this.goToReservations()} color="primary">
+              Przejdz do rezerwacji
+            </Button>
+            <Button onClick={() => this.goHome()} color="primary">
+              OK
+            </Button>
+          </DialogActions>
+        </Dialog>
           </Grid>
         </Grid>
-      ):
-      <Grid container justify="center">
-          <Grid container className="content" justify="center" item xs={9}>
-      <Typography variant="subtitle1">Aby dokonać rezerwacji, należy się zalogować.</Typography>
-      </Grid>
-      </Grid>
+      )
     }
   }
 );

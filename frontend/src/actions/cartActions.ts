@@ -62,7 +62,6 @@ export const handleMakeOrder = (token: string, orderedProducts: Array<CartItem>)
   })
     .then(res => res.json())
     .then(data => {
-      console.log(data.data.makeOrder);
       if(data.data.makeOrder === true){
         dispatch({
           type: HANDLE_ORDER_MAKE_SUCCESS,
