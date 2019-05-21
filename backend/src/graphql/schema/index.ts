@@ -97,12 +97,14 @@ type RootQuery {
     getCurrentReservations(token: String!): [Reservation]
     freeReservationsMonth(barberId: Int,serviceId: Int, date: String): [String]
     freeReservationsDay(barberId: Int,serviceId: Int, date: String): [String]
+    getAllCurrentReservations(token: String!): [Reservation]
 }
 
 type RootMutation {
     register(userInput: UserInput!) : Boolean!
     makeOrder(token: String!, order: OrderInput!): Boolean!
     makeReservation(token: String!, reservationData: ReservationData!): Boolean
+    confirmReservation(token: String!, reservation: Int!): Reservation
 }
 
 schema {

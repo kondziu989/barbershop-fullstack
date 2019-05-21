@@ -40,7 +40,7 @@ const register = async ({ userInput } : {userInput: UserData}) => {
               firstname: newUser.firstName,
               lastname: newUser.lastName,
               phone: newUser.phone,
-              idu: createdUser[0].idu,
+              idc: createdUser[0].idu,
               joined: new Date()
             };
             const createdCustomer = await trx("customers")
@@ -85,7 +85,7 @@ const login = async ({
         const userData = await db
           .select("*")
           .from("users")
-          .leftJoin("customers","users.idu","customers.idu")
+          .leftJoin("customers","users.idu","customers.idc")
           .where({ email });
         const token = jwt.sign(
           {

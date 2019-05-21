@@ -280,3 +280,56 @@ export const getCurrentReservations = async ({token} : {token : String}) => {
     }
   }
 }
+
+const verifyAdmin = async (token : String) : Promise<boolean> => {
+  if(token.length > 0) {
+    const userData = jwt.verify(token, "supersecretkey")
+    try {
+      const admin = await db.select("*").from("users").where("status", "admin")
+      if(userData.userId === admin[0].idu){
+        
+        return true
+      }
+    } catch (err) {
+      console.log(err)
+      return false
+    }
+  } else return false
+}
+
+export const getAllCurrentReservations = async ({token} : {token: String}) => {
+  try {
+      if(await verifyAdmin(token)) {
+        let allCurrentReservations : Array<Reservation> = await db.select(db.raw("idr as IdR, services.name as service, barbers.name as barberName,price,duration,status,reservationdate as date"))
+        .from("reservation")
+        .innerJoin("services", "services.ids", "reservation.ids")
+        .innerJoin("barbers", "barbers.idb", "reservation.idb")
+        .where("status", "pending")
+        allCurrentReservations = allCurrentReservations.map(reservation => {
+          return {
+            ...reservation,
+            date: moment(reservation.date).format("YYYY-MM-DD HH:MM")
+          }
+        })
+        return allCurrentReservations
+      }
+  } catch(err) {
+    console.log(err)
+  }
+}
+
+export const confirmReservation = async ({token, reservation} : {token: String, reservation : number}) => {
+  try {
+    if(await verifyAdmin(token)) {
+      await db("reservation").where("idr",reservation).update("status", "done")
+      const updatedReservation = await db.select(db.raw("idr as IdR, services.name as service, barbers.name as barberName,price,duration,status,reservationdate as date"))
+        .from("reservation")
+        .innerJoin("services", "services.ids", "reservation.ids")
+        .innerJoin("barbers", "barbers.idb", "reservation.idb")
+        .where("idr", reservation)
+      return updatedReservation[0]
+    }
+  } catch(err) {
+    console.log(err)
+  }
+}
