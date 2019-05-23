@@ -105,8 +105,8 @@ type RootMutation {
     register(userInput: UserInput!) : Boolean!
     makeOrder(token: String!, order: OrderInput!): Boolean!
     makeReservation(token: String!, reservationData: ReservationData!): Boolean
-    confirmReservation(token: String!, reservation: Int!): Reservation
-    confirmOrder(token: String!, order: Int!): Order
+    setStatusReservation(token: String!, reservation: Int!, status: String!): Reservation
+    setStatusOrder(token: String!, order: Int!, status: String!): Order
 }
 
 schema {

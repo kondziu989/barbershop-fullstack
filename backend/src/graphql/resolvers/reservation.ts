@@ -302,10 +302,10 @@ export const allReservations = async ({token, status} : {token: String, status: 
   }
 }
 
-export const confirmReservation = async ({token, reservation} : {token: String, reservation : number}) => {
+export const setStatusReservation = async ({token, reservation, status} : {token: String, reservation : number, status: string}) => {
   try {
     if(await verifyAdmin(token)) {
-      await db("reservation").where("idr",reservation).update("status", "done")
+      await db("reservation").where("idr",reservation).update("status", status)
       const updatedReservation = await db.select(db.raw("idr as IdR, services.name as service, barbers.name as barberName,price,duration,status,reservationdate as date"))
         .from("reservation")
         .innerJoin("services", "services.ids", "reservation.ids")

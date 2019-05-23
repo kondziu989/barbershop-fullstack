@@ -42,10 +42,10 @@ let theme = createMuiTheme({
     useNextVariants: true,
   },
 })
-console.log(theme)
 
 interface AppProps{
   token: string,
+  userData: any
 }
 //assets
 import './Assets/css/main.css'
@@ -98,6 +98,7 @@ class App extends Component<AppProps> {
 const mapStateToProps = (state: any) => {
   return {
     token: state.login.userData.token,
+    userData: state.login.userData
   };
 };
 

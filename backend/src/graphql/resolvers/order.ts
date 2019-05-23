@@ -115,10 +115,10 @@ export const allOrders = async ({token, status} : {token: string, status: string
     }
 }
 
-export const confirmOrder = async ({token, order} : {token: string, order: number}) => {
+export const setStatusOrder = async ({token, order, status} : {token: string, order: number, status: string}) => {
     try {
         if(await verifyAdmin(token)){
-            await db("customerorders").where("ido",order).update("status", "done");
+            await db("customerorders").where("ido",order).update("status", status);
             const updatedOrder = await db.select("*")
                                     .from("customerorders")
                                     .join("orderproduct","customerorders.ido","orderproduct.ido")
