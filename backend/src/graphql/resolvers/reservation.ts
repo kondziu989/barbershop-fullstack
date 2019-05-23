@@ -1,5 +1,6 @@
 import db from "../../db";
 import jwt from "../../dependencies";
+import {verifyAdmin} from "./auth";
 const moment = require("moment");
 
 interface ReservationData {
@@ -186,7 +187,6 @@ const allTakenHoursInDay = (reservations: any) => {
 }
 
 export const freeReservationsDay = async ({barberId,serviceId, date} : any) => {
-  //const reservationDate = moment("2019-05-06")
   const day = parseInt(moment(date).format("D"));
   let duration = await db
     .select("duration")
@@ -258,7 +258,7 @@ interface Reservation {
   duration: number
 }
 
-export const getCurrentReservations = async ({token} : {token : String}) => {
+export const reservations = async ({token, status} : {token : String, status: string}) => {
   if(token.length > 0){
     const userData = jwt.verify(token, "supersecretkey")
     try {
@@ -266,7 +266,7 @@ export const getCurrentReservations = async ({token} : {token : String}) => {
       .from("reservation")
       .innerJoin("services", "services.ids", "reservation.ids")
       .innerJoin("barbers", "barbers.idb", "reservation.idb")
-      .where("status", "pending")
+      .where("status", status)
       .andWhere("idc",userData.userId)
       userCurrentReservations = userCurrentReservations.map(reservation => {
         return {
@@ -278,5 +278,43 @@ export const getCurrentReservations = async ({token} : {token : String}) => {
     } catch (error) {
       console.log(error)
     }
+  }
+}
+
+export const allReservations = async ({token, status} : {token: String, status: string}) => {
+  try {
+      if(await verifyAdmin(token)) {
+        let allCurrentReservations : Array<Reservation> = await db.select(db.raw("idr as IdR, services.name as service, barbers.name as barberName,price,duration,status,reservationdate as date"))
+        .from("reservation")
+        .innerJoin("services", "services.ids", "reservation.ids")
+        .innerJoin("barbers", "barbers.idb", "reservation.idb")
+        .where("status", status)
+        allCurrentReservations = allCurrentReservations.map(reservation => {
+          return {
+            ...reservation,
+            date: moment(reservation.date).format("YYYY-MM-DD HH:MM")
+          }
+        })
+        return allCurrentReservations
+      }
+  } catch(err) {
+    console.log(err)
+  }
+}
+
+export const setStatusReservation = async ({token, reservation, status} : {token: String, reservation : number, status: string}) => {
+  try {
+    if(await verifyAdmin(token)) {
+      await db("reservation").where("idr",reservation).update("status", status)
+      const updatedReservation = await db.select(db.raw("idr as IdR, services.name as service, barbers.name as barberName,price,duration,status,reservationdate as date"))
+        .from("reservation")
+        .innerJoin("services", "services.ids", "reservation.ids")
+        .innerJoin("barbers", "barbers.idb", "reservation.idb")
+        .where("idr", reservation)
+      updatedReservation.date = moment(updatedReservation.date).format("YYYY-MM-DD HH:MM")
+      return updatedReservation[0]
+    }
+  } catch(err) {
+    console.log(err)
   }
 }

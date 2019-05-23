@@ -4,7 +4,9 @@ import {
   REMOVE_ITEM_FROM_CART,
   HANDLE_ORDER_MAKE_PENDING,
   HANDLE_ORDER_MAKE_SUCCESS,
-  HANDLE_ORDER_MAKE_ERROR
+  HANDLE_ORDER_MAKE_ERROR,
+  RESET_CART,
+  HANDLE_RESET_ORDER
 } from "./types";
 import { CartItem } from "../reducers/cartReducer";
 
@@ -22,6 +24,14 @@ export const removeItemFromCart = (id: number) => ({
   type: REMOVE_ITEM_FROM_CART,
   payload: { id: id }
 });
+
+export const resetOrder = () => ({
+  type: HANDLE_RESET_ORDER
+})
+
+export const resetCart = () => ({
+  type: RESET_CART
+})
 
 const query = (token: string, orderedProducts: Array<any>) => {
   console.log(orderedProducts);

@@ -15,7 +15,8 @@ import {
     GET_PENDING_RESERVATIONS_SUCCESS,
     SET_RESERVATION_STATUS_ERROR,
     SET_RESERVATION_STATUS_PENDING,
-    SET_RESERVATION_STATUS_SUCCESS
+    SET_RESERVATION_STATUS_SUCCESS,
+    RESET_CURRENT_RESERVATION
 } from './types';
 
 const queryMonth = (barberId: number, serviceId: number, date: string) => {
@@ -46,6 +47,9 @@ export const setReservationBarber = (barberId: number) => ({
     payload: barberId,
 })
 
+export const resetCurrentReservation = () => ({
+  type: RESET_CURRENT_RESERVATION
+})
 
   export const fetchFreeMonth = (barberId: number, serviceId: number, date: string) => (dispatch: any) => {
     dispatch({ type: FETCH_FREE_MONTH_PENDING});

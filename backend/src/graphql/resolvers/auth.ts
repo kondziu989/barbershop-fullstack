@@ -10,7 +10,7 @@ interface UserData {
   phone: String;
 }
 //TODO add input validation
-const register = async ({ userInput } : {userInput: UserData}) => {
+export const register = async ({ userInput } : {userInput: UserData}) => {
   const newUser: UserData = userInput;
   if(
     newUser.email!=="" 
@@ -40,7 +40,7 @@ const register = async ({ userInput } : {userInput: UserData}) => {
               firstname: newUser.firstName,
               lastname: newUser.lastName,
               phone: newUser.phone,
-              idu: createdUser[0].idu,
+              idc: createdUser[0].idu,
               joined: new Date()
             };
             const createdCustomer = await trx("customers")
@@ -67,7 +67,7 @@ const register = async ({ userInput } : {userInput: UserData}) => {
   }
 };
 //TODO add tokens
-const login = async ({
+export const login = async ({
   email,
   password
 }: {
@@ -85,7 +85,7 @@ const login = async ({
         const userData = await db
           .select("*")
           .from("users")
-          .leftJoin("customers","users.idu","customers.idu")
+          .leftJoin("customers","users.idu","customers.idc")
           .where({ email });
         const token = jwt.sign(
           {
@@ -113,4 +113,17 @@ const login = async ({
   }
 };
 
-export { register, login };
+export const verifyAdmin = async (token : String) : Promise<boolean> => {
+  if(token.length > 0) {
+    const userData = jwt.verify(token, "supersecretkey")
+    try {
+      const admin = await db.select("*").from("users").where("status", "admin")
+      if(userData.userId === admin[0].idu){
+        return true
+      }
+    } catch (err) {
+      console.log(err)
+      return false
+    }
+  } else return false
+}

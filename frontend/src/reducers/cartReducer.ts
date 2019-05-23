@@ -4,9 +4,10 @@ import {
   REMOVE_ITEM_FROM_CART,
   HANDLE_ORDER_MAKE_PENDING,
   HANDLE_ORDER_MAKE_SUCCESS,
-  HANDLE_ORDER_MAKE_ERROR
+  HANDLE_ORDER_MAKE_ERROR,
+  RESET_CART,
+  HANDLE_RESET_ORDER
 } from "../actions/types";
-import { number } from "prop-types";
 
 export interface CartItem {
   id: number;
@@ -71,7 +72,6 @@ export const cartReducer = (state = initialCartState, action: any = {}) => {
       } else return state;
 
     case REMOVE_ITEM_FROM_CART:
-      //console.log("REMOVE")
       var item = state.cart.find(item => item.id === action.payload.id);
       return item
         ? {
@@ -97,7 +97,15 @@ export const cartReducer = (state = initialCartState, action: any = {}) => {
             isPending: false,
             error: true
           }
-
+    case HANDLE_RESET_ORDER:
+        return initialCartState
+    case RESET_CART: 
+          return {
+            ...state,
+            total: 0,
+            cart: [],
+            products: []
+          }
     default:
       return state;
   }

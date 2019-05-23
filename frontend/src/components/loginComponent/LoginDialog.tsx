@@ -70,6 +70,7 @@ class LoginDialog extends React.Component<LoginDialogProps, LoginDialogState> {
 
   handleLogout = () => {
     this.props.logout();
+    location.reload();
   }
   render() {
     const {userData, err} = this.props;

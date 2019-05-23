@@ -32,11 +32,14 @@ import {
   addToCart,
   removeFromCart,
   removeItemFromCart,
-  handleMakeOrder
+  handleMakeOrder,
+  resetOrder,
+  resetCart
 } from "../../actions/cartActions";
 import { fetchProducts } from "../../actions/productsAction";
 import { CartItem, cartReducer } from "../../reducers/cartReducer";
 import classes from "*.module.scss";
+import { HANDLE_RESET_ORDER } from "../../actions/types";
 
 //redux
 //icons
@@ -101,6 +104,8 @@ interface CartProps extends WithStyles<typeof styles> {
   isPending: boolean;
   success: boolean;
   err: any;
+  handleResetCart: Function;
+  handleResetOrder: Function;
 }
 
 const Cart = class extends Component<CartProps, {}> {
@@ -142,6 +147,7 @@ const Cart = class extends Component<CartProps, {}> {
       ? this.showEmptyBasket()
       : this.displayCart();
   };
+  
   showEmptyBasket = () => {
     const { classes } = this.props;
     return (
@@ -189,12 +195,19 @@ const Cart = class extends Component<CartProps, {}> {
       );
     });
   };
-  goHome = () =>{
+
+  goHome = () => {
     this.setState({toHomePage: true})
   }
   
   goToOrderHistory = () => {
     this.setState({toOrderHistory: true})
+  }
+
+  componentDidUpdate(){
+    if(this.state.toHomePage || this.state.toOrderHistory){
+      this.props.handleResetOrder();
+    }
   }
 
   displayCart = () => {
@@ -303,9 +316,12 @@ const mapDispatchToProps = (dispatch: any) => {
     addToCart: (id: number, price: number) => dispatch(addToCart(id, price)),
     removeFromCart: (id: number) => dispatch(removeFromCart(id)),
     removeItemFromCart: (id: number) => dispatch(removeItemFromCart(id)),
-    handleMakeOrder: (token: string, orderedProducts: Array<CartItem>) => dispatch(handleMakeOrder(token, orderedProducts))
+    handleMakeOrder: (token: string, orderedProducts: Array<CartItem>) => dispatch(handleMakeOrder(token, orderedProducts)),
+    handleResetOrder: () => dispatch(resetOrder()),
+    handleResetCart: () => dispatch(resetCart())
   };
 };
+
 export default connect(
   mapStateToProps,
   mapDispatchToProps

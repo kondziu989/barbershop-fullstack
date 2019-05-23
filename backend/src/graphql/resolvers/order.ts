@@ -1,9 +1,47 @@
 import db from "../../db";
 import jwt from "../../dependencies";
+import {verifyAdmin} from "./auth";
 import { CustomerOrder } from "src/models/customerOrder";
 import { OrderProduct } from "src/models/orderProduct";
+import { strict } from "assert";
 
-const orders = async ({token} : {token: string}) => {
+const createOrders = (orders : any) : Map<number, any>  => {
+    const orderIds = new Set();
+    orders.forEach((order: any) => orderIds.add(order.ido))
+    const userOrders = new Map();
+    [...orderIds].forEach(orderId => {
+        const orderData = orders.filter((order: any) => order.ido === orderId);
+        userOrders.set(orderId, {
+        IdO: orderData[0].ido,
+        status: orderData[0].status,
+        comment: orderData[0].comment,
+        totalPrice: 0.0,
+        orderDate: new Date(orderData[0].orderdate).toLocaleDateString(),
+        orderProducts: []
+        })
+    }
+    )
+    orders.forEach((order: any) => {
+        userOrders.get(order.ido).orderProducts.push({
+            IdP: order.idp,
+            name: order.name,
+            category: order.category,
+            brand: order.brand,
+            price: order.price,
+            description: order.description,
+            quantity: order.quantity
+        })
+    })
+    for(let order of userOrders.values()){
+        const totalPrice = order.orderProducts.reduce((prev: any, product: any) => {
+            return prev + product.price * product.quantity
+        }, 0);
+        userOrders.get(order.IdO).totalPrice = totalPrice;
+    }
+    return userOrders
+}
+
+export const orders = async ({token, status} : {token: string, status: string}) => {
     if(token.length > 0){
         try {
             const userData = jwt.verify(token, "supersecretkey");
@@ -11,39 +49,9 @@ const orders = async ({token} : {token: string}) => {
                                     .from("customerorders")
                                     .join("orderproduct","customerorders.ido","orderproduct.ido")
                                     .join("product","orderproduct.idp","product.idp")
-                                    .where("idc",userData.userId);
-            const orderIds = new Set();
-            orders.forEach((order: any) => orderIds.add(order.ido))
-            const userOrders = new Map();
-            [...orderIds].forEach(orderId => {
-                const orderData = orders.filter((order: any) => order.ido === orderId);
-                userOrders.set(orderId, {
-                IdO: orderData[0].ido,
-                status: orderData[0].status,
-                comment: orderData[0].comment,
-                totalPrice: 0.0,
-                orderDate: new Date(orderData[0].orderdate).toLocaleDateString(),
-                orderProducts: []
-                })
-            }
-            )
-            orders.forEach((order: any) => {
-                userOrders.get(order.ido).orderProducts.push({
-                    IdP: order.idp,
-                    name: order.name,
-                    category: order.category,
-                    brand: order.brand,
-                    price: order.price,
-                    description: order.description,
-                    quantity: order.quantity
-                })
-            })
-            for(let order of userOrders.values()){
-                const totalPrice = order.orderProducts.reduce((prev: any, product: any) => {
-                    return prev + product.price * product.quantity
-                }, 0);
-                userOrders.get(order.IdO).totalPrice = totalPrice;
-            }
+                                    .where("idc",userData.userId)
+                                    .andWhere("status",status);
+            const userOrders = createOrders(orders);
             return userOrders.values();
         } catch(err){
             console.log(err)
@@ -51,7 +59,7 @@ const orders = async ({token} : {token: string}) => {
     }
 }
 
-const makeOrder = async ({token, order} : any)  => {
+export const makeOrder = async ({token, order} : any)  => {
     if(token.length > 0){
         const userData = jwt.verify(token, "supersecretkey");
         try {
@@ -91,4 +99,35 @@ const makeOrder = async ({token, order} : any)  => {
     }
 }
 
-export {orders, makeOrder};
+export const allOrders = async ({token, status} : {token: string, status: string}) => {
+    try {
+        if(await verifyAdmin(token)){
+            const orders = await db.select("*")
+                                    .from("customerorders")
+                                    .join("orderproduct","customerorders.ido","orderproduct.ido")
+                                    .join("product","orderproduct.idp","product.idp")
+                                    .where("status", status);
+            const userOrders = createOrders(orders);
+            return userOrders.values();
+        }
+    } catch(err) {
+        console.log(err)
+    }
+}
+
+export const setStatusOrder = async ({token, order, status} : {token: string, order: number, status: string}) => {
+    try {
+        if(await verifyAdmin(token)){
+            await db("customerorders").where("ido",order).update("status", status);
+            const updatedOrder = await db.select("*")
+                                    .from("customerorders")
+                                    .join("orderproduct","customerorders.ido","orderproduct.ido")
+                                    .join("product","orderproduct.idp","product.idp")
+                                    .where("customerorders.ido",order);
+            // console.log(createOrders(updatedOrder).values())
+            return createOrders(updatedOrder).values();
+        }
+    } catch(err){
+        console.log(err)
+    }
+}

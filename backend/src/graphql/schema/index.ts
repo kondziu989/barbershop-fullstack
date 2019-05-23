@@ -93,16 +93,20 @@ type RootQuery {
     products: [Product!]!
     services: [Service!]!
     login(email: String!, password: String!) : AuthData
-    orders(token: String!) : [Order]
-    getCurrentReservations(token: String!): [Reservation]
+    orders(token: String!, status: String!) : [Order]
+    reservations(token: String!, status: String!): [Reservation]
     freeReservationsMonth(barberId: Int,serviceId: Int, date: String): [String]
     freeReservationsDay(barberId: Int,serviceId: Int, date: String): [String]
+    allReservations(token: String!, status: String!): [Reservation]
+    allOrders(token: String!, status: String!): [Order]
 }
 
 type RootMutation {
     register(userInput: UserInput!) : Boolean!
     makeOrder(token: String!, order: OrderInput!): Boolean!
     makeReservation(token: String!, reservationData: ReservationData!): Boolean
+    setStatusReservation(token: String!, reservation: Int!, status: String!): Reservation
+    setStatusOrder(token: String!, order: Int!, status: String!): Order
 }
 
 schema {
