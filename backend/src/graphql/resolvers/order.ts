@@ -99,7 +99,7 @@ export const makeOrder = async ({token, order} : any)  => {
     }
 }
 
-export const allCurrentOrders = async ({token, status} : {token: string, status: string}) => {
+export const allOrders = async ({token, status} : {token: string, status: string}) => {
     try {
         if(await verifyAdmin(token)){
             const orders = await db.select("*")
