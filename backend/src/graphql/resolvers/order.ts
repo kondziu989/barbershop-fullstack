@@ -3,6 +3,7 @@ import jwt from "../../dependencies";
 import {verifyAdmin} from "./auth";
 import { CustomerOrder } from "src/models/customerOrder";
 import { OrderProduct } from "src/models/orderProduct";
+import { strict } from "assert";
 
 const createOrders = (orders : any) : Map<number, any>  => {
     const orderIds = new Set();
@@ -40,7 +41,7 @@ const createOrders = (orders : any) : Map<number, any>  => {
     return userOrders
 }
 
-export const orders = async ({token} : {token: string}) => {
+export const orders = async ({token, status} : {token: string, status: string}) => {
     if(token.length > 0){
         try {
             const userData = jwt.verify(token, "supersecretkey");
@@ -48,7 +49,8 @@ export const orders = async ({token} : {token: string}) => {
                                     .from("customerorders")
                                     .join("orderproduct","customerorders.ido","orderproduct.ido")
                                     .join("product","orderproduct.idp","product.idp")
-                                    .where("idc",userData.userId);
+                                    .where("idc",userData.userId)
+                                    .andWhere("status",status);
             const userOrders = createOrders(orders);
             return userOrders.values();
         } catch(err){
@@ -97,14 +99,14 @@ export const makeOrder = async ({token, order} : any)  => {
     }
 }
 
-export const getAllCurrentOrders = async ({token} : {token: string}) => {
+export const allCurrentOrders = async ({token, status} : {token: string, status: string}) => {
     try {
         if(await verifyAdmin(token)){
             const orders = await db.select("*")
                                     .from("customerorders")
                                     .join("orderproduct","customerorders.ido","orderproduct.ido")
                                     .join("product","orderproduct.idp","product.idp")
-                                    .where("status","pending");
+                                    .where("status", strict);
             const userOrders = createOrders(orders);
             return userOrders.values();
         }

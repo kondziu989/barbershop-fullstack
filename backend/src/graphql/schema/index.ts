@@ -93,12 +93,12 @@ type RootQuery {
     products: [Product!]!
     services: [Service!]!
     login(email: String!, password: String!) : AuthData
-    orders(token: String!) : [Order]
-    getCurrentReservations(token: String!): [Reservation]
+    orders(token: String!, status: String!) : [Order]
+    reservations(token: String!, status: String!): [Reservation]
     freeReservationsMonth(barberId: Int,serviceId: Int, date: String): [String]
     freeReservationsDay(barberId: Int,serviceId: Int, date: String): [String]
-    getAllCurrentReservations(token: String!): [Reservation]
-    getAllCurrentOrders(token: String!): [Order]
+    allReservations(token: String!, status: String!): [Reservation]
+    allOrders(token: String!, status: String!): [Order]
 }
 
 type RootMutation {

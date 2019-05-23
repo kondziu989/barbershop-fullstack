@@ -258,7 +258,7 @@ interface Reservation {
   duration: number
 }
 
-export const getCurrentReservations = async ({token} : {token : String}) => {
+export const reservations = async ({token, status} : {token : String, status: string}) => {
   if(token.length > 0){
     const userData = jwt.verify(token, "supersecretkey")
     try {
@@ -266,7 +266,7 @@ export const getCurrentReservations = async ({token} : {token : String}) => {
       .from("reservation")
       .innerJoin("services", "services.ids", "reservation.ids")
       .innerJoin("barbers", "barbers.idb", "reservation.idb")
-      .where("status", "pending")
+      .where("status", status)
       .andWhere("idc",userData.userId)
       userCurrentReservations = userCurrentReservations.map(reservation => {
         return {
@@ -281,14 +281,14 @@ export const getCurrentReservations = async ({token} : {token : String}) => {
   }
 }
 
-export const getAllCurrentReservations = async ({token} : {token: String}) => {
+export const allCurrentReservations = async ({token, status} : {token: String, status: string}) => {
   try {
       if(await verifyAdmin(token)) {
         let allCurrentReservations : Array<Reservation> = await db.select(db.raw("idr as IdR, services.name as service, barbers.name as barberName,price,duration,status,reservationdate as date"))
         .from("reservation")
         .innerJoin("services", "services.ids", "reservation.ids")
         .innerJoin("barbers", "barbers.idb", "reservation.idb")
-        .where("status", "pending")
+        .where("status", status)
         allCurrentReservations = allCurrentReservations.map(reservation => {
           return {
             ...reservation,
