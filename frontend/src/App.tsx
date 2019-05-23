@@ -22,6 +22,9 @@ import OrderHistory from './components/pages/OrderHistory'
 import Reservation from './components/pages/Reservation'
 import Auth from './components/pages/Auth'
 import Reservations from './components/pages/Reservations'
+import AdminReservations from './components/pages/AdminReservations'
+import AdminPanel from './components/pages/AdminPanel';
+
 
 
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core'
@@ -75,6 +78,7 @@ class App extends Component<AppProps> {
       />
     );
   }
+
   render() {
     return (
       <MuiThemeProvider theme = {theme}>
@@ -88,6 +92,8 @@ class App extends Component<AppProps> {
               <this.PrivateRoute exact path='/reservation' component = {Reservation} />
               <this.PrivateRoute exact path='/cart' component = {Cart} />
               <this.PrivateRoute exact path='/reservations' component = {Reservations} />
+              <this.PrivateRoute exact path='/admin/reservations' component = {AdminReservations} />
+              <this.PrivateRoute exact path='/admin' component = {AdminPanel} />
           <Footer />
       </Router>
       </MuiThemeProvider>

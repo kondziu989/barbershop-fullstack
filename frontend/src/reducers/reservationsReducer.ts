@@ -9,7 +9,10 @@ import {
     SET_RESERVATION_SERVICE,
     GET_CURRENT_RESERVATIONS_ERROR,
     GET_CURRENT_RESERVATIONS_PENDING,
-    GET_CURRENT_RESERVATIONS_SUCCESS
+    GET_CURRENT_RESERVATIONS_SUCCESS,
+    GET_PENDING_RESERVATIONS_ERROR,
+    GET_PENDING_RESERVATIONS_PENDING,
+    GET_PENDING_RESERVATIONS_SUCCESS
 } from "../actions/types";
   
   const initialStateMonth = {
@@ -126,4 +129,38 @@ export const currentReservationsReducer = (state = initialStateCurrentReservatio
       return state;
   }
 }
+
+
+
+const initialStatePendingReservations = {
+  isPending: false,
+  allReservations: [],
+  error: ""
+};
+
+export const pendingReservationsReducer = (state = initialStatePendingReservations, action: any) => {
+  switch (action.type) {
+      case GET_PENDING_RESERVATIONS_PENDING:
+      return {
+          ...state,
+          isPending: true
+      };
+      case GET_PENDING_RESERVATIONS_SUCCESS:
+      return {
+          ...state,
+          isPending: false,
+          allReservations: action.payload
+      };
+      case GET_PENDING_RESERVATIONS_ERROR:
+      return {
+          ...state,
+          isPending: false,
+          error: action.payload
+      };
+      default:
+      return state;
+  }
+}
+
+
 

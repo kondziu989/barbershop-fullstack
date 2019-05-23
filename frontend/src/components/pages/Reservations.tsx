@@ -10,7 +10,7 @@ import ReservationCard from "../reservationCardComponent/ReservationCard"
 
 //redux
 import { connect } from "react-redux";
-import { fetchCurrentReservaitons } from "../../actions/reservationActions";
+import { fetchCurrentReservations } from "../../actions/reservationActions";
 
 //components
 const styles = (theme: Theme) =>
@@ -38,7 +38,7 @@ const Reservations = withStyles(styles)(
   class extends Component<ReservationsProps, {}> {
 
     componentDidMount() {
-        this.props.fetchCurrentReservations(this.props.token);
+        this.props.fetchCurrentReservations(this.props.token, "pending");
     }
 
 
@@ -49,12 +49,12 @@ const Reservations = withStyles(styles)(
             <Grid item xs={12}>
                 <Typography variant="h6" color="primary" align='center'>Nadchodzące rezerwacje</Typography>
             </Grid>
-            {this.props.currentReservations.map( reservation => {
+            {typeof this.props.currentReservations!== 'undefined'?this.props.currentReservations.map( reservation => {
             return (
                 <Grid item xs={12} md={6} lg={4}>
                     <ReservationCard reservation={reservation}/>
                 </Grid>)
-            })}
+            }):<Typography>Brak nadchodzących rezerwacji.</Typography>}
           </Grid>
         </Grid>
       );
@@ -71,7 +71,7 @@ const mapStateToProps = (state: any) => {
 
 const mapDispatchToProps = (dispatch: any) => {
   return {
-    fetchCurrentReservations: (token:string) => dispatch(fetchCurrentReservaitons(token))
+    fetchCurrentReservations: (token:string, status:string) => dispatch(fetchCurrentReservations(token, status))
   };
 };
 

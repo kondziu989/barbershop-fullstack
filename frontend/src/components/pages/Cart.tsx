@@ -106,7 +106,8 @@ interface CartProps extends WithStyles<typeof styles> {
 const Cart = class extends Component<CartProps, {}> {
   state={
     toOrderHistory: false,
-    toHomePage: false
+    toHomePage: false,
+    openDialog: false,
   }
 
   cartItemsQuantity = () => {
@@ -133,6 +134,7 @@ const Cart = class extends Component<CartProps, {}> {
 
   handleOrder = (token: string, orderedProducts: Array<CartItem>) => {
     this.props.handleMakeOrder(token, orderedProducts)
+    this.setState({openDialog: true})
   }
 
   display = () => {
@@ -242,6 +244,7 @@ const Cart = class extends Component<CartProps, {}> {
     );
   };
 
+
   //***********************RENDER********************************//
   render() {
     const { classes } = this.props;
@@ -258,7 +261,7 @@ const Cart = class extends Component<CartProps, {}> {
         >
           {this.display()}
           <Dialog
-      open={this.props.success}
+      open={this.state.openDialog}
       onClose={() => this.goHome()}
     >
       <DialogTitle>Potwierdzenie Zamówienia</DialogTitle>

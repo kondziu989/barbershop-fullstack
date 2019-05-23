@@ -6,7 +6,7 @@ import {productsReducer} from "./productsReducer";
 import { barberReducer } from "./barberReducer";
 import { cartReducer } from "./cartReducer";
 import { ordersReducer } from "./ordersReducer";
-import { freeMonthReducer, freeDayReducer, reservationReducer, currentReservationsReducer } from "./reservationsReducer"
+import { freeMonthReducer, freeDayReducer, reservationReducer, currentReservationsReducer, pendingReservationsReducer } from "./reservationsReducer"
 
 
 export default combineReducers({
@@ -21,4 +21,5 @@ export default combineReducers({
     freeReservationsMonth: freeMonthReducer,
     reservation: reservationReducer,
     currentReservations: currentReservationsReducer,
+    allReservations: pendingReservationsReducer,
 })
