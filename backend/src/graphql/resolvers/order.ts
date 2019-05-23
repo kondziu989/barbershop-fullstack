@@ -106,7 +106,7 @@ export const allCurrentOrders = async ({token, status} : {token: string, status:
                                     .from("customerorders")
                                     .join("orderproduct","customerorders.ido","orderproduct.ido")
                                     .join("product","orderproduct.idp","product.idp")
-                                    .where("status", strict);
+                                    .where("status", status);
             const userOrders = createOrders(orders);
             return userOrders.values();
         }
