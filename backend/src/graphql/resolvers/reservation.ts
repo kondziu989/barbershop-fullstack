@@ -1,5 +1,6 @@
 import db from "../../db";
 import jwt from "../../dependencies";
+import {verifyAdmin} from "./auth";
 const moment = require("moment");
 
 interface ReservationData {
@@ -186,7 +187,6 @@ const allTakenHoursInDay = (reservations: any) => {
 }
 
 export const freeReservationsDay = async ({barberId,serviceId, date} : any) => {
-  //const reservationDate = moment("2019-05-06")
   const day = parseInt(moment(date).format("D"));
   let duration = await db
     .select("duration")
@@ -281,22 +281,6 @@ export const getCurrentReservations = async ({token} : {token : String}) => {
   }
 }
 
-const verifyAdmin = async (token : String) : Promise<boolean> => {
-  if(token.length > 0) {
-    const userData = jwt.verify(token, "supersecretkey")
-    try {
-      const admin = await db.select("*").from("users").where("status", "admin")
-      if(userData.userId === admin[0].idu){
-        
-        return true
-      }
-    } catch (err) {
-      console.log(err)
-      return false
-    }
-  } else return false
-}
-
 export const getAllCurrentReservations = async ({token} : {token: String}) => {
   try {
       if(await verifyAdmin(token)) {
@@ -327,6 +311,7 @@ export const confirmReservation = async ({token, reservation} : {token: String, 
         .innerJoin("services", "services.ids", "reservation.ids")
         .innerJoin("barbers", "barbers.idb", "reservation.idb")
         .where("idr", reservation)
+      updatedReservation.date = moment(updatedReservation.date).format("YYYY-MM-DD HH:MM")
       return updatedReservation[0]
     }
   } catch(err) {
