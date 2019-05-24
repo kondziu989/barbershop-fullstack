@@ -99,6 +99,7 @@ type RootQuery {
     freeReservationsDay(barberId: Int,serviceId: Int, date: String): [String]
     allReservations(token: String!, status: String!): [Reservation]
     allOrders(token: String!, status: String!): [Order]
+    palindrome(word: String!): Boolean
 }
 
 type RootMutation {
@@ -107,6 +108,8 @@ type RootMutation {
     makeReservation(token: String!, reservationData: ReservationData!): Boolean
     setStatusReservation(token: String!, reservation: Int!, status: String!): Reservation
     setStatusOrder(token: String!, order: Int!, status: String!): Order
+    generate(seed: Int!, qtt: Int!): [String]
+
 }
 
 schema {

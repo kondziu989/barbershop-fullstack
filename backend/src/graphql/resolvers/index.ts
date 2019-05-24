@@ -4,6 +4,7 @@ const serviceResolver = require('./service');
 const userResolver = require('./auth');
 const orderResolver = require("./order");
 const reservationResolver = require("./reservation")
+const rsi = require("./rsi")
 
 const rootResolver = {
     ...barberResolver,
@@ -11,7 +12,8 @@ const rootResolver = {
     ...serviceResolver,
     ...userResolver,
     ...orderResolver,
-    ...reservationResolver
+    ...reservationResolver,
+    ...rsi,
 }
 
 module.exports = rootResolver;
