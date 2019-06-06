@@ -7,10 +7,10 @@ import {
 
 
 
-const query = (token: string) => {
+const query = (token: string, status:string) => {
     return JSON.stringify({
       query: `{
-        orders(token: "${token}"){
+        orders(token: "${token}", status: "${status}"){
             IdO,
             status,
             comment,
@@ -29,7 +29,7 @@ const query = (token: string) => {
   };
   
   
-  export const fetchOrders = (token:string) => (dispatch: any) => {
+  export const fetchOrders = (token:string, status:string) => (dispatch: any) => {
     dispatch({ type: FETCH_ORDERS_PENDING });
     fetch("https://mohawkbarbershop.herokuapp.com/graphql", {
       method: "POST",
@@ -37,7 +37,7 @@ const query = (token: string) => {
         //'Accept': 'application/json',
         "Content-Type": "application/json"
       },
-      body: query(token)
+      body: query(token, status)
     })
       .then(res => res.json())
       .then(data =>

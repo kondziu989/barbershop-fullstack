@@ -57,7 +57,7 @@ const OrderHistory = withStyles(styles)(
     }
 
     componentDidMount() {
-      this.props.fetchOrders(this.props.token);
+      this.props.fetchOrders(this.props.token, 'pending');
     }
 
     populateTable = () => {
@@ -157,7 +157,7 @@ const mapStateToProps = (state: any) => {
 const mapDispatchToProps = (dispatch: any) => {
   return {
     // fetchServices: () => dispatch(fetchServices())
-    fetchOrders: (token:string) => dispatch(fetchOrders(token))
+    fetchOrders: (token:string, status: string) => dispatch(fetchOrders(token, status))
   };
 };
 
