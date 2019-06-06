@@ -19,3 +19,4 @@ https://mohawkbarbershop.herokuapp.com/
 - display user orders
 - display user reservations
 - confirm reservation
+##### Admin panel at /admin
