@@ -5,7 +5,7 @@ import {
   Theme,
   withStyles
 } from "@material-ui/core/styles";
-import { Grid, Typography } from "@material-ui/core";
+import { Grid, Typography, Tabs, Tab } from "@material-ui/core";
 import ReservationCard from "../reservationCardComponent/ReservationCard"
 
 //redux
@@ -17,6 +17,13 @@ const styles = (theme: Theme) =>
   createStyles({
     
   });
+
+  enum status{
+    done = 'done',
+    pending = 'pending',
+    cancelled = 'cancelled'
+  }
+  
 
 export interface Reservation{
     idr: number
@@ -37,10 +44,17 @@ interface ReservationsProps extends WithStyles<typeof styles> {
 const Reservations = withStyles(styles)(
   class extends Component<ReservationsProps, {}> {
 
+    state={
+      tab: status.pending
+    }
     componentDidMount() {
         this.props.fetchCurrentReservations(this.props.token, "pending");
     }
 
+    handleChange = (event:any, newValue:any) => {
+      this.setState({tab: newValue});
+      this.props.fetchCurrentReservations(this.props.token, newValue)
+    }
 
     render() {
       return (
@@ -48,6 +62,19 @@ const Reservations = withStyles(styles)(
           <Grid container className="content" justify="center" item xs={9} spacing={32}>
             <Grid item xs={12}>
                 <Typography variant="h6" color="primary" align='center'>Nadchodzące rezerwacje</Typography>
+            </Grid>
+            <Grid item xs={12}>
+            <Tabs
+                value={this.state.tab}
+                onChange={this.handleChange}
+                indicatorColor="primary"
+                textColor="primary"
+                centered
+              >
+              <Tab label="Nadchodząca" value={status.pending} />
+              <Tab label="Zakończona" value={status.done}/>
+              <Tab label="Anulowana" value={status.cancelled} />
+            </Tabs>
             </Grid>
             {typeof this.props.currentReservations!== 'undefined'?this.props.currentReservations.map( reservation => {
             return (
