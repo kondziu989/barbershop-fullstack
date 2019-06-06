@@ -1,10 +1,11 @@
 # barbershop-fullstack
 Server build with node.js and express.js with graphql
-Frontend build with react + redux
+Frontend build with react + redux using material.ui
 #### Api documentation 
 https://mohawkbarbershop.herokuapp.com/graphql
 #### Working App
 https://mohawkbarbershop.herokuapp.com/
+
 #### To run the app in dev mode:
 1. clone the repo
 2. cd frondend
@@ -13,10 +14,16 @@ https://mohawkbarbershop.herokuapp.com/
 #### Implemented functionalities:
 - login
 - register
-- display shop services and offer
 - main page layout
+- display shop, offer and team
 - order products
+- make reservation
 - display user orders
 - display user reservations
-- confirm reservation
+- side drawer user panel
+- shopping cart
+
+For admin:
+- display reservations
+- change reservation status
 ##### Admin panel at /admin
